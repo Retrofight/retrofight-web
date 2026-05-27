@@ -1,36 +1,135 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RetroFight Web
 
-## Getting Started
+Landing page ufficiale di RetroFight, realizzata con Next.js, React, TypeScript e Tailwind CSS.
 
-First, run the development server:
+Il progetto presenta l'identita' del prodotto, racconta il valore del netplay arcade moderno e include sezioni interattive per simulare rollback netcode, matchmaking e flussi di download.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Stack
+
+- Next.js 16 con App Router
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- ESLint 9
+- Lucide React per le icone
+
+## Requisiti
+
+- Node.js 18 o superiore
+- npm
+
+## Installazione
+
+```powershell
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Sviluppo
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```powershell
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Il server di sviluppo usa la porta `3001`:
 
-## Learn More
+```txt
+http://localhost:3001
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Script disponibili
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```powershell
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Avvia Next.js in modalita sviluppo sulla porta `3001`.
 
-## Deploy on Vercel
+```powershell
+npm run build
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Genera la build di produzione.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```powershell
+npm run start
+```
+
+Avvia la build di produzione generata da Next.js.
+
+```powershell
+npm run lint
+```
+
+Esegue ESLint sul progetto.
+
+## Struttura
+
+```txt
+retrofight-web/
++-- public/
+|   +-- landing/
+|       +-- retrofight-hero.png
++-- src/
+|   +-- app/
+|   |   +-- globals.css
+|   |   +-- layout.tsx
+|   |   +-- page.tsx
+|   +-- components/
+|       +-- landing/
+|           +-- LandingPage.tsx
+|           +-- Navbar.tsx
+|           +-- Hero.tsx
+|           +-- Features.tsx
+|           +-- RollbackSimulator.tsx
+|           +-- MatchmakerSimulator.tsx
+|           +-- CabinetGuide.tsx
+|           +-- Faq.tsx
+|           +-- DownloadModal.tsx
+|           +-- Footer.tsx
+|           +-- types.ts
++-- eslint.config.mjs
++-- next.config.ts
++-- package.json
++-- tsconfig.json
+```
+
+## Sezioni della landing
+
+- `Navbar`: navigazione principale e call to action download.
+- `Hero`: headline, CTA, visual arcade e messaggi chiave.
+- `Features`: card sui benefici tecnici e di prodotto.
+- `RollbackSimulator`: simulatore interattivo tra delay netcode e rollback.
+- `MatchmakerSimulator`: mock UI di lobby, creazione stanza e connessione.
+- `CabinetGuide`: guida visuale per setup cabinet e configurazioni dedicate.
+- `Faq`: risposte alle domande principali.
+- `DownloadModal`: flusso modale per selezione piattaforma e stato download simulato.
+- `Footer`: chiusura pagina e link di navigazione.
+
+## Note di prodotto
+
+La landing contiene contenuti dimostrativi e interattivi. Le opzioni di download, i nomi dei pacchetti, le lobby simulate, i valori di latenza e alcuni esempi di configurazione sono dati mock pensati per presentare l'esperienza utente prevista.
+
+Prima di una pubblicazione pubblica stabile, verificare che:
+
+- versioni e nomi pacchetto nel download siano allineati alla release reale;
+- testi tecnici e claim di prodotto riflettano funzionalita effettivamente rilasciate;
+- asset grafici finali siano ottimizzati;
+- link esterni e CTA puntino alle destinazioni definitive;
+- FAQ e guida cabinet non promettano feature non ancora disponibili.
+
+## Convenzioni
+
+- I componenti della landing vivono in `src/components/landing/`.
+- I tipi condivisi della landing stanno in `src/components/landing/types.ts`.
+- Gli asset statici specifici della landing stanno in `public/landing/`.
+- La home page `src/app/page.tsx` renderizza `LandingPage`.
+- Il layout globale e i metadata principali sono in `src/app/layout.tsx`.
+
+## Verifica rapida
+
+Prima di aprire una pull request:
+
+```powershell
+npm run lint
+npm run build
+```

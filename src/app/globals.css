@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Press+Start+2P&family=Space+Grotesk:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-pixel: "Press Start 2P", monospace;
+  
+  --color-brand-purple-50: #fef2f2;
+  --color-brand-purple-400: #f87171;
+  --color-brand-purple-500: #ef4444;
+  --color-brand-purple-600: #dc2626;
+  --color-brand-purple-900: #1f1f23;
+  --color-brand-purple-950: #0d0d10;
+  
+  --color-brand-cyan-400: #fca5a5;
+  --color-brand-cyan-500: #ef4444;
+  --color-brand-cyan-600: #b91c1c;
+  --color-brand-cyan-950: #0d0d10;
+  
+  --color-brand-pink-500: #ef4444;
+  --color-brand-pink-600: #991b1b;
+  --color-brand-pink-950: #0d0d10;
+  
+  --color-dark-obsidian: #050505;
+  --color-dark-card: #0c0c0e;
+  --color-dark-border: rgba(255, 255, 255, 0.1);
+}
+
+/* Custom glow effects and scrollbars */
+@utility neon-glow-purple {
+  text-shadow: 0 0 10px rgba(220, 38, 38, 0.4), 0 0 20px rgba(220, 38, 38, 0.2);
+}
+
+@utility neon-glow-cyan {
+  text-shadow: 0 0 10px rgba(239, 68, 68, 0.4), 0 0 20px rgba(239, 68, 68, 0.2);
+}
+
+@utility neon-border-purple {
+  box-shadow: 0 0 15px rgba(220, 38, 38, 0.15), inset 0 0 15px rgba(220, 38, 38, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+@utility neon-border-cyan {
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.15), inset 0 0 15px rgba(239, 68, 68, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+@utility retro-scanlines {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%
+  ), linear-gradient(
+    90deg, 
+    rgba(220, 38, 38, 0.04), 
+    rgba(255, 255, 255, 0.01), 
+    rgba(220, 38, 38, 0.04)
+  );
+  background-size: 100% 4px, 6px 100%;
+}
+
+html {
+  font-family: var(--font-sans);
+  background-color: var(--color-dark-obsidian);
+  color: #e0e0e0;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background-color: var(--color-dark-obsidian);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+/* Custom scrollbar matching sleek Bento Box */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #dc2626;
+}

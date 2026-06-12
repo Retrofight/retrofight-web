@@ -1,146 +1,158 @@
-import Image from 'next/image';
-import { Download, Play, Terminal, Cpu, Network, ShieldCheck } from 'lucide-react';
+import Image from "next/image";
+import Link from "next/link";
+import {
+  Archive,
+  Code,
+  Download,
+  ExternalLink,
+  Gamepad2,
+  Monitor,
+  Network,
+  ShieldCheck,
+} from "lucide-react";
+import type { Locale, dictionaries } from "@/app/[lang]/dictionaries";
 
 const heroImg = "/landing/retrofight-hero.png";
 
-interface HeroProps {
-  onDownloadClick: () => void;
-}
+type HeroProps = {
+  lang: Locale;
+  dictionary: (typeof dictionaries)[Locale];
+};
 
-export default function Hero({ onDownloadClick }: HeroProps) {
+export default function Hero({ lang, dictionary }: HeroProps) {
+  const home = dictionary.home;
+
   return (
-    <div className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-dark-obsidian">
-      {/* Background radial effects */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand-purple-900/10 rounded-full blur-[120px] pointer-events-none"></div>
-      <div className="absolute bottom-10 right-1/4 w-[400px] h-[400px] bg-brand-cyan-500/10 rounded-full blur-[100px] pointer-events-none"></div>
-      
-      {/* Horizontal glowing cyber lines */}
-      <div className="absolute top-[30%] left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-purple-500/10 to-transparent"></div>
-      <div className="absolute top-[70%] left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-cyan-500/10 to-transparent"></div>
+    <>
+      <section className="relative overflow-hidden border-b border-dark-border bg-dark-obsidian">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(220,38,38,0.16),transparent_36%),linear-gradient(180deg,rgba(255,255,255,0.04),transparent_42%)]" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          
-          {/* Column 1: Copywriting */}
-          <div className="col-span-1 lg:col-span-7 flex flex-col space-y-6 text-left">
-            
-            {/* Pulsing Game-Start Badge */}
-            <div className="inline-flex items-center space-x-2 bg-brand-purple-950/40 border border-brand-purple-500/30 px-3.5 py-1.5 rounded-full w-fit">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-pink-500 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-pink-500"></span>
-              </span>
-              <span className="font-pixel text-[9px] text-brand-purple-400 tracking-wider">
-                VERSION 1.0.2 • PRESS START TO FIGHT
+        <div className="relative mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-24">
+          <div className="flex flex-col justify-center">
+            <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-sm border border-brand-purple-500/30 bg-brand-purple-950/40 px-3 py-2">
+              <span className="h-2 w-2 bg-brand-purple-500" />
+              <span className="font-pixel text-[9px] uppercase tracking-widest text-brand-purple-400">
+                {home.badge}
               </span>
             </div>
 
-            {/* Main Title */}
-            <h1 className="font-display font-black italic uppercase tracking-tighter text-5xl sm:text-6xl lg:text-7xl leading-[0.95] text-white">
-              Sconfiggi il lag nei{' '}
-              <span className="text-brand-purple-600">
-                Retrogames
-              </span>
-              .<br />Sfide online a <span className="text-white bg-brand-purple-600 px-3 py-1 inline-block transform -rotate-1">latenza zero</span>.
+            <h1 className="font-display text-6xl font-black uppercase italic leading-none tracking-normal text-white sm:text-7xl lg:text-8xl">
+              {home.title}
             </h1>
-
-            {/* Subtitle */}
-            <p className="text-zinc-400 text-base md:text-lg font-normal leading-relaxed max-w-2xl">
-              <strong className="text-white font-bold">Retrofight</strong> è l'interfaccia Electron intelligente progettata per Cabinati Arcade, Fightstick e Desktop. Sfrutta i core <strong className="text-white">RetroArch</strong> integrandoli direttamente con il netcode <strong className="text-brand-purple-500">GGPO</strong> e <strong className="text-brand-purple-400">Hole Punching NAT Traversal</strong>.
+            <p className="mt-6 max-w-2xl text-xl font-semibold leading-relaxed text-zinc-200">
+              {home.subtitle}
             </p>
-            <p className="text-zinc-500 text-xs leading-relaxed max-w-2xl -mt-2">
-              Basta configurazioni router estenuanti o lag ingiocabile: avvia il matchmaking immediato con i tuoi amici e gioca a picchiaduro e classici arcade con l'esperienza fluida del multiplayer locale.
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-zinc-400">
+              {home.intro}
             </p>
 
-            {/* Calls to Action */}
-            <div className="flex flex-wrap gap-4 pt-4">
-              <button
-                id="hero-download-btn"
-                onClick={onDownloadClick}
-                className="px-8 py-4 bg-brand-purple-600 hover:bg-brand-purple-500 text-white font-display font-black uppercase tracking-tighter italic rounded-sm shadow-lg transform active:scale-95 transition-all duration-150 cursor-pointer flex items-center space-x-3"
+            <div className="mt-7 flex flex-wrap items-center gap-3 text-sm text-zinc-300">
+              <span className="inline-flex items-center gap-2 rounded-sm border border-white/10 bg-white/[0.03] px-3 py-2">
+                <Monitor className="h-4 w-4 text-brand-purple-400" />
+                {home.windowsOnly}
+              </span>
+              <span className="inline-flex items-center gap-2 rounded-sm border border-white/10 bg-white/[0.03] px-3 py-2">
+                <Network className="h-4 w-4 text-brand-purple-400" />
+                FBNeo + GGPO
+              </span>
+            </div>
+
+            <div id="downloads" className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a
+                href={dictionary.installerUrl}
+                className="inline-flex items-center justify-center gap-2 rounded-sm bg-brand-purple-600 px-6 py-4 font-display text-sm font-black uppercase italic text-white transition hover:bg-brand-purple-500"
               >
                 <Download className="h-5 w-5" />
-                <span>Scarica Retrofight</span>
-              </button>
-
-              <a
-                href="#simulator"
-                className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white border border-white/10 hover:border-brand-purple-500 font-display font-bold uppercase tracking-tighter italic rounded-sm transition-all duration-150 flex items-center space-x-2"
-              >
-                <Play className="h-4 w-4" />
-                <span>Prova il Simulatore</span>
+                {home.downloadExe}
               </a>
+              <a
+                href={dictionary.portableUrl}
+                className="inline-flex items-center justify-center gap-2 rounded-sm border border-white/10 bg-white/[0.04] px-6 py-4 font-display text-sm font-black uppercase italic text-white transition hover:border-brand-purple-500"
+              >
+                <Archive className="h-5 w-5" />
+                {home.downloadZip}
+              </a>
+              <Link
+                href={`/${lang}/wiki`}
+                className="inline-flex items-center justify-center gap-2 rounded-sm border border-white/10 px-6 py-4 font-display text-sm font-bold uppercase italic text-zinc-200 transition hover:border-brand-purple-500 hover:text-white"
+              >
+                <Gamepad2 className="h-5 w-5" />
+                {home.howTo}
+              </Link>
             </div>
-
-            {/* Key Technical Flags */}
-            <div className="grid grid-cols-3 gap-4 pt-6 text-xs text-gray-400 border-t border-dark-border max-w-xl">
-              <div className="flex items-center space-x-2">
-                <Cpu className="h-4.5 w-4.5 text-brand-cyan-400 shrink-0" />
-                <span>GGPO Rollback</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Network className="h-4.5 w-4.5 text-brand-pink-500 shrink-0" />
-                <span>P2P Nat traversal</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <ShieldCheck className="h-4.5 w-4.5 text-brand-purple-500 shrink-0" />
-                <span>Cabinet Ready</span>
-              </div>
-            </div>
-
           </div>
 
-          {/* Column 2: Visual Fightstick Mockup with Retro scanline CRT effect */}
-          <div className="col-span-1 lg:col-span-5 relative flex justify-center">
-            
-            {/* Background ambient light */}
-            <div className="absolute -inset-2 bg-gradient-to-r from-brand-purple-600 to-brand-cyan-500 rounded-2xl opacity-30 blur-xl"></div>
-            
-            {/* CRT Monitor Container Wrapper */}
-            <div className="relative border-4 border-slate-700/80 rounded-2xl overflow-hidden bg-black max-w-[480px] w-full shadow-2xl shadow-brand-purple-950/50">
-              
-              {/* Scanlines layer */}
-              <div className="absolute inset-0 retro-scanlines pointer-events-none z-10 opacity-70"></div>
-              
-              {/* Fake Arcade bezel frame */}
-              <div className="absolute inset-0 border-[12px] border-slate-900 pointer-events-none z-10"></div>
-              <div className="absolute top-2 left-1/2 -translate-x-1/2 px-4 py-0.5 bg-brand-pink-600 text-white font-pixel text-[8px] tracking-widest uppercase rounded-b z-20 shadow-md">
-                ARCADE FIGHTSTICK ACTIVE
-              </div>
-
-              {/* Generated image */}
-              <div className="relative aspect-video w-full overflow-hidden">
+          <div className="relative flex items-center">
+            <div className="relative w-full overflow-hidden rounded-sm border border-white/10 bg-black shadow-2xl shadow-black/60">
+              <div className="retro-scanlines pointer-events-none absolute inset-0 z-10 opacity-60" />
+              <div className="relative aspect-[4/3] w-full">
                 <Image
                   src={heroImg}
-                  alt="Retrofight Arcade Controller"
+                  alt="RetroFight arcade controller"
                   fill
                   priority
-                  sizes="(min-width: 1024px) 480px, 100vw"
-                  className="pointer-events-none object-cover transition-transform duration-700 hover:scale-105"
+                  sizes="(min-width: 1024px) 560px, 100vw"
+                  className="object-cover"
                 />
               </div>
-              
-              {/* Cyber HUD Terminal statistics inside CRT display */}
-              <div className="bg-slate-950/90 p-4 border-t border-slate-800 flex justify-between items-center text-[10px] font-mono select-none">
-                <div className="flex items-center space-x-2">
-                  <Terminal className="h-3 w-3 text-brand-cyan-400 animate-pulse" />
-                  <span className="text-brand-cyan-400">ggpo_interface.dll</span>
-                </div>
-                <div className="flex items-center space-x-3 text-gray-400">
-                  <span>FPS: <strong className="text-green-400">59.97</strong></span>
-                  <span className="text-brand-purple-400">ROLLBACK: 0f</span>
-                  <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-ping"></span>
-                </div>
+              <div className="grid grid-cols-3 border-t border-white/10 bg-black/85 text-center font-mono text-[10px] uppercase text-zinc-400">
+                <span className="border-r border-white/10 px-2 py-3 text-brand-purple-400">
+                  Windows
+                </span>
+                <span className="border-r border-white/10 px-2 py-3">1v1</span>
+                <span className="px-2 py-3">UDP direct</span>
               </div>
-
             </div>
-
-            {/* Glowing neon ring behind controller */}
-            <div className="absolute -bottom-6 w-4/5 h-2 bg-brand-purple-500 rounded-full blur-md opacity-50"></div>
           </div>
-          
         </div>
-      </div>
-    </div>
+      </section>
+
+      <section id="project" className="border-b border-dark-border bg-[#08080a] py-14">
+        <div className="mx-auto grid max-w-7xl gap-5 px-4 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
+          {home.cards.map((card) => (
+            <article key={card.title} className="rounded-sm border border-white/10 bg-dark-card p-6">
+              <ShieldCheck className="mb-5 h-6 w-6 text-brand-purple-400" />
+              <h2 className="font-display text-xl font-extrabold uppercase italic tracking-normal text-white">
+                {card.title}
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-zinc-400">{card.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="bg-dark-obsidian py-16">
+        <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
+          <div>
+            <span className="font-pixel text-[9px] uppercase tracking-widest text-brand-purple-400">
+              RetroFight
+            </span>
+            <h2 className="mt-3 font-display text-4xl font-black uppercase italic tracking-normal text-white">
+              {home.projectTitle}
+            </h2>
+          </div>
+          <div className="space-y-4">
+            <ul className="space-y-3 text-zinc-300">
+              {home.projectNotes.map((note) => (
+                <li key={note} className="flex gap-3">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 bg-brand-purple-500" />
+                  <span>{note}</span>
+                </li>
+              ))}
+            </ul>
+            <a
+              href={dictionary.githubOrg}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-sm border border-white/10 px-4 py-3 text-sm font-semibold uppercase text-zinc-200 transition hover:border-brand-purple-500 hover:text-white"
+            >
+              <Code className="h-4 w-4" />
+              {home.githubCta}
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

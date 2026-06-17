@@ -12,6 +12,7 @@ Il progetto presenta l'identita' del prodotto, racconta il valore del netplay ar
 - Tailwind CSS 4
 - ESLint 9
 - Lucide React per le icone
+- Supabase Auth per login e registrazione email/password
 
 ## Requisiti
 
@@ -35,6 +36,38 @@ Il server di sviluppo usa la porta `3001`:
 ```txt
 http://localhost:3001
 ```
+
+## Variabili ambiente Supabase
+
+Creare un file `.env.local` locale con:
+
+```txt
+NEXT_PUBLIC_SUPABASE_URL=https://<project-ref>.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
+NEXT_PUBLIC_SITE_URL=http://localhost:3001
+```
+
+Su Vercel configurare le stesse variabili in `Project Settings > Environment Variables`:
+
+- `NEXT_PUBLIC_SUPABASE_URL`: Project URL Supabase.
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`: publishable key Supabase.
+- `NEXT_PUBLIC_SITE_URL`: dominio pubblico del sito in produzione, ad esempio `https://retrofight.example`.
+
+Per preview deploy, Vercel espone anche `VERCEL_URL`; il codice la usa come fallback per costruire il redirect auth, ma il dominio production va comunque inserito in `NEXT_PUBLIC_SITE_URL`.
+
+## Configurazione Supabase Auth
+
+Nel dashboard Supabase:
+
+1. Aprire `Authentication > Providers` e lasciare abilitato `Email`.
+2. Aprire `Authentication > URL Configuration`.
+3. Impostare `Site URL` al dominio production del sito.
+4. Aggiungere in `Redirect URLs`:
+   - `http://localhost:3001/**`
+   - `https://<dominio-production>/**`
+   - `https://*-<team-or-account-slug>.vercel.app/**` se si usano preview deploy Vercel.
+
+Il flusso implementato usa `/auth/callback` per completare la conferma email e poi porta l'utente su `/<lang>/account`.
 
 ## Script disponibili
 
@@ -74,7 +107,13 @@ retrofight-web/
 |   |   +-- globals.css
 |   |   +-- layout.tsx
 |   |   +-- page.tsx
+|   |   +-- auth/
+|   |   |   +-- callback/
+|   |   +-- [lang]/
+|   |       +-- account/
+|   |       +-- login/
 |   +-- components/
+|   |   +-- auth/
 |       +-- landing/
 |           +-- LandingPage.tsx
 |           +-- Navbar.tsx
@@ -96,6 +135,7 @@ retrofight-web/
 ## Sezioni della landing
 
 - `Navbar`: navigazione principale e call to action download.
+- `AuthPanel`: form login/registrazione con Supabase Auth.
 - `Hero`: headline, CTA, visual arcade e messaggi chiave.
 - `Features`: card sui benefici tecnici e di prodotto.
 - `RollbackSimulator`: simulatore interattivo tra delay netcode e rollback.

@@ -51,6 +51,12 @@ export default function Navbar({ lang, dictionary }: NavbarProps) {
               {dictionary.nav.wiki}
             </Link>
             <Link
+              href={`/${lang}/login`}
+              className="rounded-sm border border-white/10 px-3 py-2 text-xs font-semibold uppercase text-zinc-300 transition hover:border-brand-purple-500 hover:text-white"
+            >
+              {dictionary.nav.auth}
+            </Link>
+            <Link
               href={`/${alternateLang}`}
               className="rounded-sm border border-white/10 px-3 py-2 text-xs font-semibold uppercase text-zinc-300 transition hover:border-brand-purple-500 hover:text-white"
               aria-label={dictionary.nav.language}

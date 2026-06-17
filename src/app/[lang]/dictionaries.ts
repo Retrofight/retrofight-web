@@ -22,6 +22,7 @@ export const dictionaries = {
       downloads: "Downloads",
       wiki: "How to play",
       github: "GitHub",
+      auth: "Login",
       language: "Language",
     },
     footer: {
@@ -185,6 +186,7 @@ export const dictionaries = {
       downloads: "Download",
       wiki: "Come giocare",
       github: "GitHub",
+      auth: "Login",
       language: "Lingua",
     },
     footer: {

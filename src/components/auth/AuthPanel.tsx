@@ -24,6 +24,10 @@ const copy = {
     back: "Back to home",
     invalid: "Check your email and password, then try again.",
     signupFailed: "Registration did not complete. Try another email or password.",
+    callbackFailed: "The confirmation link is incomplete. Request a new registration email.",
+    linkExpired: "The confirmation link is invalid or expired. Register again or request a new email.",
+    verifierMissing:
+      "Email confirmed, but this browser could not complete automatic sign-in. Sign in with your email and password.",
     checkEmail: "Check your inbox to confirm the account before signing in.",
     signedOut: "You have been signed out.",
   },
@@ -42,6 +46,12 @@ const copy = {
     invalid: "Controlla email e password, poi riprova.",
     signupFailed:
       "La registrazione non e' riuscita. Prova un'altra email o password.",
+    callbackFailed:
+      "Il link di conferma e' incompleto. Richiedi una nuova email di registrazione.",
+    linkExpired:
+      "Il link di conferma non e' valido o e' scaduto. Registrati di nuovo o richiedi una nuova email.",
+    verifierMissing:
+      "Email confermata, ma questo browser non ha completato l'accesso automatico. Accedi con email e password.",
     checkEmail: "Controlla la mail e conferma l'account prima di accedere.",
     signedOut: "Logout effettuato.",
   },
@@ -84,11 +94,17 @@ export default function AuthPanel({ lang, error, notice }: AuthPanelProps) {
       ? text.invalid
       : error === "signup_failed"
         ? text.signupFailed
-        : notice === "check_email"
-          ? text.checkEmail
-          : notice === "signed_out"
-            ? text.signedOut
-            : null;
+        : error === "auth_callback_failed"
+          ? text.callbackFailed
+          : error === "auth_link_expired"
+            ? text.linkExpired
+            : error === "auth_verifier_missing"
+              ? text.verifierMissing
+              : notice === "check_email"
+                ? text.checkEmail
+                : notice === "signed_out"
+                  ? text.signedOut
+                  : null;
 
   return (
     <main className="min-h-screen bg-dark-obsidian px-4 py-10 text-gray-100 sm:px-6">

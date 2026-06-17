@@ -61,7 +61,9 @@ export default function AuthPanel({
                 ? text.checkEmail
                 : notice === "signed_out"
                   ? text.signedOut
-                  : null;
+                  : notice === "password_reset"
+                    ? text.passwordReset
+                    : null;
 
   return (
     <main className="min-h-screen bg-dark-obsidian px-4 py-10 text-gray-100 sm:px-6">
@@ -118,6 +120,12 @@ export default function AuthPanel({
                 <LogIn className="h-4 w-4" />
                 {text.signIn}
               </button>
+              <Link
+                href={`/${lang}/forgot-password`}
+                className="text-xs font-semibold uppercase text-zinc-400 transition hover:text-white"
+              >
+                {text.forgotPassword}
+              </Link>
             </div>
           </form>
 

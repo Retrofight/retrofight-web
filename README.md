@@ -68,6 +68,7 @@ Nel dashboard Supabase:
    - `https://*-<team-or-account-slug>.vercel.app/**` se si usano preview deploy Vercel.
 
 Il flusso implementato usa `/auth/callback` per completare la conferma email e poi porta l'utente su `/<lang>/profile`.
+Il recupero password parte da `/<lang>/forgot-password`, passa da `/auth/callback` e termina su `/<lang>/reset-password`.
 
 ## Script disponibili
 
@@ -111,8 +112,10 @@ retrofight-web/
 |   |   |   +-- callback/
 |   |   +-- [lang]/
 |   |       +-- account/
+|   |       +-- forgot-password/
 |   |       +-- login/
 |   |       +-- profile/
+|   |       +-- reset-password/
 |   +-- components/
 |   |   +-- auth/
 |       +-- landing/

@@ -24,6 +24,21 @@ async function getAuthRedirectUrl(lang: Locale) {
   return `${siteUrl}/auth/callback?next=/${lang}/profile`;
 }
 
+async function getPasswordRecoveryRedirectUrl(lang: Locale) {
+  const headersList = await headers();
+  const origin = headersList.get("origin");
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : undefined) ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined) ||
+    origin ||
+    "http://localhost:3001";
+
+  return `${siteUrl}/auth/callback?next=/${lang}/reset-password`;
+}
+
 function redirectToLogin(lang: Locale, key: "invalid" | "signup_failed") {
   redirect(`/${lang}/login?error=${key}`);
 }
@@ -79,4 +94,23 @@ export async function signUp(lang: Locale, formData: FormData) {
   }
 
   redirect(`/${lang}/login?notice=check_email`);
+}
+
+export async function requestPasswordReset(lang: Locale, formData: FormData) {
+  const email = cleanText(formData.get("email"));
+
+  if (!email) {
+    redirect(`/${lang}/forgot-password?error=missing_email`);
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: await getPasswordRecoveryRedirectUrl(lang),
+  });
+
+  if (error) {
+    redirect(`/${lang}/forgot-password?error=request_failed`);
+  }
+
+  redirect(`/${lang}/forgot-password?notice=reset_sent`);
 }

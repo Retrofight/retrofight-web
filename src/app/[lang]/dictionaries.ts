@@ -56,6 +56,35 @@ export const dictionaries = {
         "Email confirmed, but this browser could not complete automatic sign-in. Sign in with your email and password.",
       checkEmail: "Check your inbox to confirm the profile before signing in.",
       signedOut: "You have been signed out.",
+      passwordReset: "Password updated. Sign in with the new password.",
+      forgotPassword: "Forgot password?",
+    },
+    forgotPassword: {
+      eyebrow: "Profile recovery",
+      title: "Recover your password",
+      subtitle:
+        "Enter your email and we will send a secure link to choose a new password.",
+      email: "Email",
+      submit: "Send recovery email",
+      back: "Back to sign in",
+      missingEmail: "Enter your email address.",
+      requestFailed: "The recovery email could not be sent. Try again later.",
+      resetSent:
+        "If a profile exists for this email, you will receive a recovery link.",
+    },
+    resetPassword: {
+      eyebrow: "Password recovery",
+      title: "Choose a new password",
+      subtitle:
+        "Use at least 8 characters. Additional security rules are enforced automatically.",
+      password: "New password",
+      confirmPassword: "Confirm new password",
+      submit: "Update password",
+      missing: "Complete every password field.",
+      mismatch: "The new password and confirmation do not match.",
+      weak: "Use at least 8 characters for the new password.",
+      policy: "The new password does not match the configured security policy.",
+      back: "Back to sign in",
     },
     profile: {
       title: "Profile",
@@ -272,6 +301,35 @@ export const dictionaries = {
         "Email confermata, ma questo browser non ha completato l'accesso automatico. Accedi con email e password.",
       checkEmail: "Controlla la mail e conferma il profilo prima di accedere.",
       signedOut: "Logout effettuato.",
+      passwordReset: "Password aggiornata. Accedi con la nuova password.",
+      forgotPassword: "Password dimenticata?",
+    },
+    forgotPassword: {
+      eyebrow: "Recupero profilo",
+      title: "Recupera la password",
+      subtitle:
+        "Inserisci la tua email e invieremo un link sicuro per scegliere una nuova password.",
+      email: "Email",
+      submit: "Invia email di recupero",
+      back: "Torna all'accesso",
+      missingEmail: "Inserisci il tuo indirizzo email.",
+      requestFailed: "Non e' stato possibile inviare l'email di recupero. Riprova piu' tardi.",
+      resetSent:
+        "Se esiste un profilo per questa email, riceverai un link di recupero.",
+    },
+    resetPassword: {
+      eyebrow: "Recupero password",
+      title: "Scegli una nuova password",
+      subtitle:
+        "Usa almeno 8 caratteri. Le regole di sicurezza aggiuntive sono applicate automaticamente.",
+      password: "Nuova password",
+      confirmPassword: "Conferma nuova password",
+      submit: "Aggiorna password",
+      missing: "Completa tutti i campi password.",
+      mismatch: "La nuova password e la conferma non coincidono.",
+      weak: "Usa almeno 8 caratteri per la nuova password.",
+      policy: "La nuova password non rispetta la policy di sicurezza configurata.",
+      back: "Torna all'accesso",
     },
     profile: {
       title: "Profilo",

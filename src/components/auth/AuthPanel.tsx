@@ -11,10 +11,10 @@ type AuthPanelProps = {
 
 const copy = {
   en: {
-    eyebrow: "RetroFight account",
+    eyebrow: "RetroFight profile",
     title: "Sign in or create your player profile",
     subtitle:
-      "Accounts are the base for future public profiles, match history, and ranking features.",
+      "Player profiles are the base for future public pages, match history, and ranking features.",
     signIn: "Sign in",
     signUp: "Register",
     email: "Email",
@@ -28,14 +28,14 @@ const copy = {
     linkExpired: "The confirmation link is invalid or expired. Register again or request a new email.",
     verifierMissing:
       "Email confirmed, but this browser could not complete automatic sign-in. Sign in with your email and password.",
-    checkEmail: "Check your inbox to confirm the account before signing in.",
+    checkEmail: "Check your inbox to confirm the profile before signing in.",
     signedOut: "You have been signed out.",
   },
   it: {
-    eyebrow: "Account RetroFight",
+    eyebrow: "Profilo RetroFight",
     title: "Accedi o crea il tuo profilo player",
     subtitle:
-      "Gli account sono la base per profili pubblici, storico match e ranking futuri.",
+      "I profili player sono la base per pagine pubbliche, storico match e ranking futuri.",
     signIn: "Accedi",
     signUp: "Registrati",
     email: "Email",
@@ -52,7 +52,7 @@ const copy = {
       "Il link di conferma non e' valido o e' scaduto. Registrati di nuovo o richiedi una nuova email.",
     verifierMissing:
       "Email confermata, ma questo browser non ha completato l'accesso automatico. Accedi con email e password.",
-    checkEmail: "Controlla la mail e conferma l'account prima di accedere.",
+    checkEmail: "Controlla la mail e conferma il profilo prima di accedere.",
     signedOut: "Logout effettuato.",
   },
 } as const;

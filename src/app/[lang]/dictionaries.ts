@@ -22,7 +22,10 @@ export const dictionaries = {
       downloads: "Downloads",
       wiki: "How to play",
       github: "GitHub",
-      auth: "Login",
+      auth: "Sign in / Register",
+      profile: "Profile",
+      userMenu: "User menu",
+      signOut: "Sign out",
       language: "Language",
     },
     footer: {
@@ -186,7 +189,10 @@ export const dictionaries = {
       downloads: "Download",
       wiki: "Come giocare",
       github: "GitHub",
-      auth: "Login",
+      auth: "Accedi / Registrati",
+      profile: "Profilo",
+      userMenu: "Menu utente",
+      signOut: "Esci",
       language: "Lingua",
     },
     footer: {

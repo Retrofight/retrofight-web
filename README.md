@@ -67,7 +67,7 @@ Nel dashboard Supabase:
    - `https://<dominio-production>/**`
    - `https://*-<team-or-account-slug>.vercel.app/**` se si usano preview deploy Vercel.
 
-Il flusso implementato usa `/auth/callback` per completare la conferma email e poi porta l'utente su `/<lang>/account`.
+Il flusso implementato usa `/auth/callback` per completare la conferma email e poi porta l'utente su `/<lang>/profile`.
 
 ## Script disponibili
 
@@ -112,6 +112,7 @@ retrofight-web/
 |   |   +-- [lang]/
 |   |       +-- account/
 |   |       +-- login/
+|   |       +-- profile/
 |   +-- components/
 |   |   +-- auth/
 |       +-- landing/

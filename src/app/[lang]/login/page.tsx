@@ -1,6 +1,7 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import AuthPanel from "@/components/auth/AuthPanel";
 import { hasLocale } from "../dictionaries";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function LoginPage({
   params,
@@ -14,6 +15,13 @@ export default async function LoginPage({
 
   if (!hasLocale(lang)) {
     notFound();
+  }
+
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getClaims();
+
+  if (data?.claims) {
+    redirect(`/${lang}/profile`);
   }
 
   return <AuthPanel lang={lang} error={error} notice={notice} />;

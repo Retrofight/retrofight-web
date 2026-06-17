@@ -21,7 +21,7 @@ async function getAuthRedirectUrl(lang: Locale) {
     origin ||
     "http://localhost:3001";
 
-  return `${siteUrl}/auth/callback?next=/${lang}/account`;
+  return `${siteUrl}/auth/callback?next=/${lang}/profile`;
 }
 
 function redirectToLogin(lang: Locale, key: "invalid" | "signup_failed") {
@@ -46,7 +46,7 @@ export async function signIn(lang: Locale, formData: FormData) {
     redirectToLogin(lang, "invalid");
   }
 
-  redirect(`/${lang}/account`);
+  redirect(`/${lang}/profile`);
 }
 
 export async function signUp(lang: Locale, formData: FormData) {
@@ -75,7 +75,7 @@ export async function signUp(lang: Locale, formData: FormData) {
   }
 
   if (data.session) {
-    redirect(`/${lang}/account`);
+    redirect(`/${lang}/profile`);
   }
 
   redirect(`/${lang}/login?notice=check_email`);

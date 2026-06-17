@@ -9,9 +9,9 @@ export function hasLocale(locale: string): locale is Locale {
 const shared = {
   githubOrg: "https://github.com/Retrofight",
   installerUrl:
-    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.3.8-beta.2/RetroFight-win-x64.exe",
+    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.4.1-beta.6/RetroFight-win-x64.exe",
   portableUrl:
-    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.3.8-beta.2/RetroFight-win-x64.zip",
+    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.4.1-beta.6/RetroFight-win-x64.zip",
 };
 
 export const dictionaries = {

@@ -1,61 +1,14 @@
 import Link from "next/link";
 import { Gamepad2, LogIn, UserPlus } from "lucide-react";
-import type { Locale } from "@/app/[lang]/dictionaries";
+import type { Locale, dictionaries } from "@/app/[lang]/dictionaries";
 import { signIn, signUp } from "@/app/[lang]/login/actions";
 
 type AuthPanelProps = {
   lang: Locale;
+  dictionary: (typeof dictionaries)[Locale]["auth"];
   error?: string;
   notice?: string;
 };
-
-const copy = {
-  en: {
-    eyebrow: "RetroFight profile",
-    title: "Sign in or create your player profile",
-    subtitle:
-      "Player profiles are the base for future public pages, match history, and ranking features.",
-    signIn: "Sign in",
-    signUp: "Register",
-    email: "Email",
-    password: "Password",
-    displayName: "Player name",
-    displayNameHint: "Optional",
-    back: "Back to home",
-    invalid: "Check your email and password, then try again.",
-    signupFailed: "Registration did not complete. Try another email or password.",
-    callbackFailed: "The confirmation link is incomplete. Request a new registration email.",
-    linkExpired: "The confirmation link is invalid or expired. Register again or request a new email.",
-    verifierMissing:
-      "Email confirmed, but this browser could not complete automatic sign-in. Sign in with your email and password.",
-    checkEmail: "Check your inbox to confirm the profile before signing in.",
-    signedOut: "You have been signed out.",
-  },
-  it: {
-    eyebrow: "Profilo RetroFight",
-    title: "Accedi o crea il tuo profilo player",
-    subtitle:
-      "I profili player sono la base per pagine pubbliche, storico match e ranking futuri.",
-    signIn: "Accedi",
-    signUp: "Registrati",
-    email: "Email",
-    password: "Password",
-    displayName: "Nome player",
-    displayNameHint: "Opzionale",
-    back: "Torna alla home",
-    invalid: "Controlla email e password, poi riprova.",
-    signupFailed:
-      "La registrazione non e' riuscita. Prova un'altra email o password.",
-    callbackFailed:
-      "Il link di conferma e' incompleto. Richiedi una nuova email di registrazione.",
-    linkExpired:
-      "Il link di conferma non e' valido o e' scaduto. Registrati di nuovo o richiedi una nuova email.",
-    verifierMissing:
-      "Email confermata, ma questo browser non ha completato l'accesso automatico. Accedi con email e password.",
-    checkEmail: "Controlla la mail e conferma il profilo prima di accedere.",
-    signedOut: "Logout effettuato.",
-  },
-} as const;
 
 function Field({
   label,
@@ -87,8 +40,12 @@ function Field({
   );
 }
 
-export default function AuthPanel({ lang, error, notice }: AuthPanelProps) {
-  const text = copy[lang];
+export default function AuthPanel({
+  lang,
+  dictionary: text,
+  error,
+  notice,
+}: AuthPanelProps) {
   const message =
     error === "invalid"
       ? text.invalid

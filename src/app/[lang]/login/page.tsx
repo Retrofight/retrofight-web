@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import AuthPanel from "@/components/auth/AuthPanel";
-import { hasLocale } from "../dictionaries";
+import { getDictionary, hasLocale } from "../dictionaries";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function LoginPage({
@@ -24,5 +24,12 @@ export default async function LoginPage({
     redirect(`/${lang}/profile`);
   }
 
-  return <AuthPanel lang={lang} error={error} notice={notice} />;
+  return (
+    <AuthPanel
+      lang={lang}
+      dictionary={getDictionary(lang).auth}
+      error={error}
+      notice={notice}
+    />
+  );
 }

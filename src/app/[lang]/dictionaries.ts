@@ -33,6 +33,55 @@ export const dictionaries = {
         "RetroFight Project. Game files and trademarks belong to their respective owners.",
       backToTop: "Back to top",
     },
+    auth: {
+      eyebrow: "RetroFight profile",
+      title: "Sign in or create your player profile",
+      subtitle:
+        "Player profiles are the base for future public pages, match history, and ranking features.",
+      signIn: "Sign in",
+      signUp: "Register",
+      email: "Email",
+      password: "Password",
+      displayName: "Player name",
+      displayNameHint: "Optional",
+      back: "Back to home",
+      invalid: "Check your email and password, then try again.",
+      signupFailed:
+        "Registration did not complete. Try another email or password.",
+      callbackFailed:
+        "The confirmation link is incomplete. Request a new registration email.",
+      linkExpired:
+        "The confirmation link is invalid or expired. Register again or request a new email.",
+      verifierMissing:
+        "Email confirmed, but this browser could not complete automatic sign-in. Sign in with your email and password.",
+      checkEmail: "Check your inbox to confirm the profile before signing in.",
+      signedOut: "You have been signed out.",
+    },
+    profile: {
+      title: "Profile",
+      subtitle: "Your RetroFight profile is active.",
+      email: "Email",
+      player: "Player name",
+      home: "Back to home",
+      signOut: "Sign out",
+      readOnly: "Locked",
+      identityTitle: "Identity",
+      passwordTitle: "Change password",
+      currentPassword: "Current password",
+      newPassword: "New password",
+      confirmPassword: "Confirm new password",
+      passwordHint:
+        "Use at least 8 characters. Additional security rules are enforced automatically.",
+      updatePassword: "Update password",
+      passwordMessages: {
+        missing: "Complete every password field.",
+        mismatch: "The new password and confirmation do not match.",
+        weak: "Use at least 8 characters for the new password.",
+        current_invalid: "The current password is not correct.",
+        policy: "The new password does not match the configured security policy.",
+        updated: "Password updated.",
+      },
+    },
     home: {
       badge: "Beta test version",
       title: "RetroFight",
@@ -199,6 +248,56 @@ export const dictionaries = {
       copyright:
         "RetroFight Project. I file di gioco e i marchi appartengono ai rispettivi proprietari.",
       backToTop: "Torna su",
+    },
+    auth: {
+      eyebrow: "Profilo RetroFight",
+      title: "Accedi o crea il tuo profilo player",
+      subtitle:
+        "I profili player sono la base per pagine pubbliche, storico match e ranking futuri.",
+      signIn: "Accedi",
+      signUp: "Registrati",
+      email: "Email",
+      password: "Password",
+      displayName: "Nome player",
+      displayNameHint: "Opzionale",
+      back: "Torna alla home",
+      invalid: "Controlla email e password, poi riprova.",
+      signupFailed:
+        "La registrazione non e' riuscita. Prova un'altra email o password.",
+      callbackFailed:
+        "Il link di conferma e' incompleto. Richiedi una nuova email di registrazione.",
+      linkExpired:
+        "Il link di conferma non e' valido o e' scaduto. Registrati di nuovo o richiedi una nuova email.",
+      verifierMissing:
+        "Email confermata, ma questo browser non ha completato l'accesso automatico. Accedi con email e password.",
+      checkEmail: "Controlla la mail e conferma il profilo prima di accedere.",
+      signedOut: "Logout effettuato.",
+    },
+    profile: {
+      title: "Profilo",
+      subtitle: "Il tuo profilo RetroFight e' attivo.",
+      email: "Email",
+      player: "Nome player",
+      home: "Torna alla home",
+      signOut: "Esci",
+      readOnly: "Bloccato",
+      identityTitle: "Identita'",
+      passwordTitle: "Modifica password",
+      currentPassword: "Password attuale",
+      newPassword: "Nuova password",
+      confirmPassword: "Conferma nuova password",
+      passwordHint:
+        "Usa almeno 8 caratteri. Le regole di sicurezza aggiuntive sono applicate automaticamente.",
+      updatePassword: "Aggiorna password",
+      passwordMessages: {
+        missing: "Completa tutti i campi password.",
+        mismatch: "La nuova password e la conferma non coincidono.",
+        weak: "Usa almeno 8 caratteri per la nuova password.",
+        current_invalid: "La password attuale non e' corretta.",
+        policy:
+          "La nuova password non rispetta la policy di sicurezza configurata.",
+        updated: "Password aggiornata.",
+      },
     },
     home: {
       badge: "Versione beta per test",

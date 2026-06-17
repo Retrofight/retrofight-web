@@ -2,63 +2,11 @@ import Link from "next/link";
 import { redirect, notFound } from "next/navigation";
 import { KeyRound, LogOut, ShieldCheck, UserRound } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { hasLocale } from "../dictionaries";
+import { getDictionary, hasLocale, type dictionaries } from "../dictionaries";
 import { signOut, updatePassword } from "./actions";
 
-const copy = {
-  en: {
-    title: "Profile",
-    subtitle: "Your RetroFight profile is active.",
-    email: "Email",
-    player: "Player name",
-    home: "Back to home",
-    signOut: "Sign out",
-    readOnly: "Locked",
-    identityTitle: "Identity",
-    passwordTitle: "Change password",
-    currentPassword: "Current password",
-    newPassword: "New password",
-    confirmPassword: "Confirm new password",
-    passwordHint:
-      "Use at least 8 characters. Additional security rules are enforced automatically.",
-    updatePassword: "Update password",
-    passwordMessages: {
-      missing: "Complete every password field.",
-      mismatch: "The new password and confirmation do not match.",
-      weak: "Use at least 8 characters for the new password.",
-      current_invalid: "The current password is not correct.",
-      policy: "The new password does not match the configured security policy.",
-      updated: "Password updated.",
-    },
-  },
-  it: {
-    title: "Profilo",
-    subtitle: "Il tuo profilo RetroFight e' attivo.",
-    email: "Email",
-    player: "Nome player",
-    home: "Torna alla home",
-    signOut: "Esci",
-    readOnly: "Bloccato",
-    identityTitle: "Identita'",
-    passwordTitle: "Modifica password",
-    currentPassword: "Password attuale",
-    newPassword: "Nuova password",
-    confirmPassword: "Conferma nuova password",
-    passwordHint:
-      "Usa almeno 8 caratteri. Le regole di sicurezza aggiuntive sono applicate automaticamente.",
-    updatePassword: "Aggiorna password",
-    passwordMessages: {
-      missing: "Completa tutti i campi password.",
-      mismatch: "La nuova password e la conferma non coincidono.",
-      weak: "Usa almeno 8 caratteri per la nuova password.",
-      current_invalid: "La password attuale non e' corretta.",
-      policy: "La nuova password non rispetta la policy di sicurezza configurata.",
-      updated: "Password aggiornata.",
-    },
-  },
-} as const;
-
-type PasswordStatus = keyof (typeof copy)["en"]["passwordMessages"];
+type ProfileDictionary = (typeof dictionaries)["en"]["profile"];
+type PasswordStatus = keyof ProfileDictionary["passwordMessages"];
 
 function isPasswordStatus(value: string | undefined): value is PasswordStatus {
   return (
@@ -95,7 +43,7 @@ export default async function ProfilePage({
 
   const { data } = await supabase.auth.getUser();
   const user = data.user;
-  const text = copy[lang];
+  const text = getDictionary(lang).profile;
   const displayName =
     typeof user?.user_metadata?.display_name === "string"
       ? user.user_metadata.display_name

@@ -8,10 +8,16 @@ export function hasLocale(locale: string): locale is Locale {
 
 const shared = {
   githubOrg: "https://github.com/Retrofight",
+  releaseUrl:
+    "https://github.com/Retrofight/retrofight-releases/releases/tag/v0.6.5-beta.0",
   installerUrl:
-    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.4.1-beta.6/RetroFight-win-x64.exe",
+    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.6.5-beta.0/RetroFight-Windows-Setup-0.6.5-beta.0-x64.exe",
   portableUrl:
-    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.4.1-beta.6/RetroFight-win-x64.zip",
+    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.6.5-beta.0/RetroFight-Windows-0.6.5-beta.0-x64.zip",
+  linuxAppImageUrl:
+    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.6.5-beta.0/RetroFight-Linux-0.6.5-beta.0-x86_64.AppImage",
+  linuxDebUrl:
+    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.6.5-beta.0/RetroFight-Linux-0.6.5-beta.0-amd64.deb",
 };
 
 export const dictionaries = {
@@ -115,17 +121,19 @@ export const dictionaries = {
       badge: "Beta test version",
       title: "RetroFight",
       subtitle:
-        "A Windows arcade fighting game matchmaking client focused on direct, low-latency 1v1 play.",
+        "A desktop arcade fighting game matchmaking client focused on direct, low-latency 1v1 play.",
       intro:
-        "RetroFight combines a desktop client, online lobbies, match challenges, and a custom RetroFight FBNeo runtime built for competitive arcade sessions.",
-      windowsOnly: "Currently available for Windows only.",
-      downloadExe: "Download installer",
-      downloadZip: "Download portable zip",
+        "RetroFight combines a desktop client for Windows and Linux, online lobbies, match challenges, and a custom RetroFight FBNeo runtime built for competitive arcade sessions.",
+      platforms: "Beta builds for Windows and Linux.",
+      downloadWindowsInstaller: "Windows installer",
+      downloadWindowsPortable: "Windows portable zip",
+      downloadLinuxAppImage: "Linux AppImage",
+      downloadLinuxDeb: "Linux deb",
       howTo: "Read how to play",
       cards: [
         {
           title: "Beta for testing",
-          text: "The current release is a beta focused on stable direct online play, clear connection feedback, and a clean Windows release experience.",
+          text: "The current release is a beta focused on stable direct online play, clear connection feedback, and clean Windows and Linux packages.",
         },
         {
           title: "Custom FBNeo runtime",
@@ -151,16 +159,16 @@ export const dictionaries = {
     },
     wiki: {
       title: "How to Play RetroFight Beta",
-      subtitle: "Basic RetroFight beta flow for Windows users.",
+      subtitle: "Basic RetroFight beta flow for Windows and Linux users.",
       back: "Back to home",
       sections: [
         {
           title: "Before You Start",
           items: [
-            "A Windows PC.",
+            "A Windows or Linux PC.",
             "A RetroFight beta release build.",
             "Network access to the RetroFight server.",
-            "Permission for RetroFight and RetroFight FBNeo through Windows Firewall.",
+            "Permission for RetroFight and RetroFight FBNeo through your firewall.",
             "Game files that you legally own and are authorized to use.",
           ],
           note: "RetroFight does not include, distribute, or download game ROMs.",
@@ -168,9 +176,9 @@ export const dictionaries = {
         {
           title: "Install Or Launch",
           items: [
-            "Run RetroFight-win-x64.exe to install RetroFight.",
-            "Extract RetroFight-win-x64.zip and launch the portable build.",
-            "If RetroFight FBNeo does not start because d3dx9_43.dll is missing, install the Microsoft DirectX End-User Runtime legacy package and restart RetroFight.",
+            "On Windows, run the setup EXE or extract the portable ZIP.",
+            "On Linux, use the AppImage or install the deb package. The beta package includes the Wine runtime used to launch RetroFight FBNeo.",
+            "If your OS blocks the first launch, allow the downloaded beta package and try again.",
           ],
         },
         {
@@ -227,7 +235,8 @@ export const dictionaries = {
             {
               title: "Runtime does not start",
               items: [
-                "Install the Microsoft DirectX End-User Runtime legacy package if d3dx9_43.dll is missing.",
+                "On Windows, allow RetroFight and RetroFight FBNeo through your antivirus or firewall if they were blocked.",
+                "On Linux, make the AppImage executable or reinstall the deb package.",
                 "Check whether antivirus software blocked the runtime.",
                 "Reinstall or re-extract the RetroFight release build.",
               ],
@@ -235,7 +244,7 @@ export const dictionaries = {
             {
               title: "UDP direct failed",
               items: [
-                "Allow RetroFight and RetroFight FBNeo through Windows Firewall.",
+                "Allow RetroFight and RetroFight FBNeo through your firewall.",
                 "Avoid VPNs, hotspots, hotel networks, school networks, office networks, or restrictive routers during beta testing.",
                 "Try again from a home network.",
                 "If the network blocks UDP direct traffic, this beta does not provide a relay fallback.",
@@ -361,17 +370,19 @@ export const dictionaries = {
       badge: "Versione beta per test",
       title: "RetroFight",
       subtitle:
-        "Un client Windows per matchmaking arcade fighting game 1v1, pensato per partite dirette a bassa latenza.",
+        "Un client desktop per matchmaking arcade fighting game 1v1, pensato per partite dirette a bassa latenza.",
       intro:
-        "RetroFight combina client desktop, lobby online, sfide tra giocatori e un runtime RetroFight FBNeo custom costruito per sessioni arcade competitive.",
-      windowsOnly: "Al momento disponibile solo per Windows.",
-      downloadExe: "Scarica installer",
-      downloadZip: "Scarica zip portable",
+        "RetroFight combina client desktop per Windows e Linux, lobby online, sfide tra giocatori e un runtime RetroFight FBNeo custom costruito per sessioni arcade competitive.",
+      platforms: "Build beta per Windows e Linux.",
+      downloadWindowsInstaller: "Installer Windows",
+      downloadWindowsPortable: "Zip portable Windows",
+      downloadLinuxAppImage: "AppImage Linux",
+      downloadLinuxDeb: "Deb Linux",
       howTo: "Leggi come giocare",
       cards: [
         {
           title: "Beta per test",
-          text: "La release attuale e' una beta orientata a gioco online diretto stabile, feedback di connessione chiaro e distribuzione Windows pulita.",
+          text: "La release attuale e' una beta orientata a gioco online diretto stabile, feedback di connessione chiaro e pacchetti Windows e Linux puliti.",
         },
         {
           title: "Runtime FBNeo custom",
@@ -397,16 +408,16 @@ export const dictionaries = {
     },
     wiki: {
       title: "Come giocare a RetroFight Beta",
-      subtitle: "Flusso base della beta RetroFight per utenti Windows.",
+      subtitle: "Flusso base della beta RetroFight per utenti Windows e Linux.",
       back: "Torna alla home",
       sections: [
         {
           title: "Prima di iniziare",
           items: [
-            "Un PC Windows.",
+            "Un PC Windows o Linux.",
             "Una build release beta di RetroFight.",
             "Accesso di rete al server RetroFight.",
-            "Permesso per RetroFight e RetroFight FBNeo nel firewall di Windows.",
+            "Permesso per RetroFight e RetroFight FBNeo nel firewall del sistema.",
             "File di gioco che possiedi legalmente e che sei autorizzato a usare.",
           ],
           note: "RetroFight non include, distribuisce o scarica ROM.",
@@ -414,9 +425,9 @@ export const dictionaries = {
         {
           title: "Installa o avvia",
           items: [
-            "Esegui RetroFight-win-x64.exe per installare RetroFight.",
-            "Estrai RetroFight-win-x64.zip e avvia la build portable.",
-            "Se RetroFight FBNeo non parte perche' manca d3dx9_43.dll, installa il pacchetto legacy Microsoft DirectX End-User Runtime e riavvia RetroFight.",
+            "Su Windows, esegui il setup EXE oppure estrai lo ZIP portable.",
+            "Su Linux, usa l'AppImage oppure installa il pacchetto deb. Il pacchetto beta include il runtime Wine usato per avviare RetroFight FBNeo.",
+            "Se il sistema blocca il primo avvio, consenti il pacchetto beta scaricato e riprova.",
           ],
         },
         {
@@ -473,7 +484,8 @@ export const dictionaries = {
             {
               title: "Il runtime non parte",
               items: [
-                "Installa il pacchetto legacy Microsoft DirectX End-User Runtime se manca d3dx9_43.dll.",
+                "Su Windows, consenti RetroFight e RetroFight FBNeo se antivirus o firewall li hanno bloccati.",
+                "Su Linux, rendi eseguibile l'AppImage oppure reinstalla il pacchetto deb.",
                 "Controlla se l'antivirus ha bloccato il runtime.",
                 "Reinstalla o riestrai la build release di RetroFight.",
               ],
@@ -481,7 +493,7 @@ export const dictionaries = {
             {
               title: "UDP direct fallito",
               items: [
-                "Consenti RetroFight e RetroFight FBNeo nel firewall di Windows.",
+                "Consenti RetroFight e RetroFight FBNeo nel firewall del sistema.",
                 "Evita VPN, hotspot, reti hotel, reti scolastiche, reti aziendali o router restrittivi durante il test beta.",
                 "Riprova da una rete domestica.",
                 "Se la rete blocca il traffico UDP direct, questa beta non fornisce un fallback relay.",

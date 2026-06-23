@@ -38,17 +38,17 @@ export default function Footer({ lang, dictionary }: FooterProps) {
               className="inline-flex items-center gap-2 rounded-sm border border-white/10 px-3 py-2 font-semibold text-zinc-300 transition hover:border-brand-purple-500 hover:text-white"
             >
               <Download className="h-4 w-4" />
-              EXE
+              Windows
             </a>
             <a
-              href={dictionary.portableUrl}
+              href={dictionary.linuxAppImageUrl}
               className="inline-flex items-center gap-2 rounded-sm border border-white/10 px-3 py-2 font-semibold text-zinc-300 transition hover:border-brand-purple-500 hover:text-white"
             >
               <Download className="h-4 w-4" />
-              ZIP
+              Linux
             </a>
             <a
-              href={dictionary.githubOrg}
+              href={dictionary.releaseUrl}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 rounded-sm border border-white/10 px-3 py-2 font-semibold text-zinc-300 transition hover:border-brand-purple-500 hover:text-white"

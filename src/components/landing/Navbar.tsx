@@ -95,13 +95,13 @@ export default function Navbar({
             >
               {alternateLang.toUpperCase()}
             </Link>
-            <a
-              href={dictionary.installerUrl}
+            <Link
+              href={`/${lang}#downloads`}
               className="inline-flex items-center gap-2 rounded-sm bg-brand-purple-600 px-3 py-2 text-xs font-black uppercase text-white transition hover:bg-brand-purple-500"
             >
               <Download className="h-4 w-4" />
               <span className="hidden sm:inline">{dictionary.nav.downloads}</span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>

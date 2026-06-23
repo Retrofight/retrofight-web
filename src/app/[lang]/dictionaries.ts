@@ -137,6 +137,21 @@ export const dictionaries = {
         policy: "The new password does not match the configured security policy.",
         updated: "Password updated.",
       },
+      privacyMessages: {
+        accepted: "Privacy consent is active.",
+        revoked:
+          "Privacy consent has been revoked. Online services that require consent may be unavailable.",
+        update_failed: "Privacy consent could not be updated. Try again later.",
+      },
+      privacyConsent: {
+        title: "Privacy consent",
+        description:
+          "Manage your acceptance of the Terms of Use and Privacy Policy stored on your RetroFight account.",
+        checkbox: "I accept the Terms of Use and Privacy Policy.",
+        revocationWarning:
+          "Without this consent, services that require account privacy consent may be unavailable.",
+        save: "Save privacy preference",
+      },
       accountMessages: {
         email_mismatch: "The confirmation email does not match your account.",
         delete_failed: "The account could not be deleted. Try again later.",
@@ -441,6 +456,22 @@ export const dictionaries = {
         policy:
           "La nuova password non rispetta la policy di sicurezza configurata.",
         updated: "Password aggiornata.",
+      },
+      privacyMessages: {
+        accepted: "Il consenso privacy e' attivo.",
+        revoked:
+          "Il consenso privacy e' stato revocato. I servizi online che richiedono il consenso potrebbero non essere disponibili.",
+        update_failed:
+          "Non e' stato possibile aggiornare il consenso privacy. Riprova piu' tardi.",
+      },
+      privacyConsent: {
+        title: "Consenso privacy",
+        description:
+          "Gestisci l'accettazione dei Termini di utilizzo e della Privacy Policy salvata sul tuo account RetroFight.",
+        checkbox: "Accetto i Termini di utilizzo e la Privacy Policy.",
+        revocationWarning:
+          "Senza questo consenso, i servizi che richiedono il consenso privacy dell'account potrebbero non essere disponibili.",
+        save: "Salva preferenza privacy",
       },
       accountMessages: {
         email_mismatch:

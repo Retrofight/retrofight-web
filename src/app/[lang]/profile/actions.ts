@@ -2,6 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import {
+  getPrivacyConsentMetadata,
+  getPrivacyConsentRevocationMetadata,
+} from "@/lib/privacy/consent";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import type { Locale } from "../dictionaries";
@@ -60,6 +64,41 @@ export async function updatePassword(lang: Locale, formData: FormData) {
 
   revalidatePath(`/${lang}/profile`);
   redirect(`/${lang}/profile?password=updated`);
+}
+
+export async function updatePrivacyConsent(lang: Locale, formData: FormData) {
+  const accepted = formData.get("privacyConsent") === "accepted";
+  const supabase = await createClient();
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+
+  if (userError || !userData.user) {
+    redirect(`/${lang}/login`);
+  }
+
+  const currentMetadata =
+    userData.user.user_metadata &&
+    typeof userData.user.user_metadata === "object"
+      ? userData.user.user_metadata
+      : {};
+  const consentMetadata = accepted
+    ? getPrivacyConsentMetadata(lang)
+    : getPrivacyConsentRevocationMetadata(lang);
+
+  const { error } = await supabase.auth.updateUser({
+    data: {
+      ...currentMetadata,
+      ...consentMetadata,
+    },
+  });
+
+  if (error) {
+    redirect(`/${lang}/profile?privacy=update_failed`);
+  }
+
+  revalidatePath(`/${lang}/profile`);
+  redirect(
+    `/${lang}/profile?privacy=${accepted ? "accepted" : "revoked"}`,
+  );
 }
 
 export async function deleteAccount(lang: Locale, formData: FormData) {

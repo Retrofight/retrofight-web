@@ -2,6 +2,8 @@ import Link from "next/link";
 import { redirect, notFound } from "next/navigation";
 import { KeyRound, LogOut, ShieldCheck, UserRound } from "lucide-react";
 import { DeleteAccountPanel } from "@/components/profile/DeleteAccountPanel";
+import { PrivacyConsentPanel } from "@/components/profile/PrivacyConsentPanel";
+import { hasActivePrivacyConsent } from "@/lib/privacy/consent";
 import { createClient } from "@/lib/supabase/server";
 import { getDictionary, hasLocale, type dictionaries } from "../dictionaries";
 import { signOut, updatePassword } from "./actions";
@@ -9,6 +11,7 @@ import { signOut, updatePassword } from "./actions";
 type ProfileDictionary = (typeof dictionaries)["en"]["profile"];
 type PasswordStatus = keyof ProfileDictionary["passwordMessages"];
 type AccountStatus = keyof ProfileDictionary["accountMessages"];
+type PrivacyStatus = keyof ProfileDictionary["privacyMessages"];
 
 function isPasswordStatus(value: string | undefined): value is PasswordStatus {
   return (
@@ -29,15 +32,23 @@ function isAccountStatus(value: string | undefined): value is AccountStatus {
   );
 }
 
+function isPrivacyStatus(value: string | undefined): value is PrivacyStatus {
+  return (
+    value === "accepted" ||
+    value === "revoked" ||
+    value === "update_failed"
+  );
+}
+
 export default async function ProfilePage({
   params,
   searchParams,
 }: {
   params: Promise<{ lang: string }>;
-  searchParams: Promise<{ password?: string; account?: string }>;
+  searchParams: Promise<{ account?: string; password?: string; privacy?: string }>;
 }) {
   const { lang } = await params;
-  const { account, password } = await searchParams;
+  const { account, password, privacy } = await searchParams;
 
   if (!hasLocale(lang)) {
     notFound();
@@ -65,6 +76,10 @@ export default async function ProfilePage({
   const accountMessage = isAccountStatus(account)
     ? text.accountMessages[account]
     : null;
+  const privacyMessage = isPrivacyStatus(privacy)
+    ? text.privacyMessages[privacy]
+    : null;
+  const privacyConsentAccepted = hasActivePrivacyConsent(user?.user_metadata);
 
   return (
     <main className="min-h-screen bg-dark-obsidian px-4 py-10 text-gray-100 sm:px-6">
@@ -122,6 +137,18 @@ export default async function ProfilePage({
           </section>
 
           <div className="grid gap-5">
+            <PrivacyConsentPanel
+              accepted={privacyConsentAccepted}
+              dictionary={text.privacyConsent}
+              lang={lang}
+            />
+
+            {privacyMessage ? (
+              <p className="border-l-2 border-brand-purple-500 bg-white/[0.04] px-4 py-3 text-sm font-semibold text-zinc-100">
+                {privacyMessage}
+              </p>
+            ) : null}
+
             <section className="rounded-sm border border-white/10 bg-dark-card p-6 shadow-2xl shadow-black/30">
               <div className="flex items-center gap-3">
                 <KeyRound className="h-5 w-5 text-brand-purple-400" />

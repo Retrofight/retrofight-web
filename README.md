@@ -161,6 +161,18 @@ Prima di una pubblicazione pubblica stabile, verificare che:
 - link esterni e CTA puntino alle destinazioni definitive;
 - FAQ e guida cabinet non promettano feature non ancora disponibili.
 
+## Documenti legali
+
+I documenti legali pubblici di RetroFight sono mantenuti nel repository [retrofight-legal](https://github.com/Retrofight/retrofight-legal) e sono parte essenziale del progetto:
+
+- [Legal Notice](https://github.com/Retrofight/retrofight-legal/blob/main/LEGAL_NOTICE.md)
+- [Terms of Use](https://github.com/Retrofight/retrofight-legal/blob/main/TERMS_OF_USE.md)
+- [First Run Disclaimer](https://github.com/Retrofight/retrofight-legal/blob/main/FIRST_RUN_DISCLAIMER.md)
+- [Download Disclaimer](https://github.com/Retrofight/retrofight-legal/blob/main/DOWNLOAD_DISCLAIMER.md)
+- [Third-Party Content Notice](https://github.com/Retrofight/retrofight-legal/blob/main/THIRD_PARTY_CONTENT.md)
+- [Copyright Policy](https://github.com/Retrofight/retrofight-legal/blob/main/COPYRIGHT_POLICY.md)
+- [Legal FAQ](https://github.com/Retrofight/retrofight-legal/blob/main/FAQ_LEGAL.md)
+
 ## Convenzioni
 
 - I componenti della landing vivono in `src/components/landing/`.

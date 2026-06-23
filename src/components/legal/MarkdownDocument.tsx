@@ -19,7 +19,7 @@ export function MarkdownDocument({ markdown }: MarkdownDocumentProps) {
           return (
             <h1
               key={index}
-              className="font-display text-4xl font-black uppercase italic tracking-normal text-white sm:text-5xl"
+              className="font-display text-4xl font-black tracking-normal text-white sm:text-5xl"
             >
               {block.text}
             </h1>
@@ -30,7 +30,7 @@ export function MarkdownDocument({ markdown }: MarkdownDocumentProps) {
           return (
             <h2
               key={index}
-              className="pt-4 font-display text-2xl font-black uppercase italic tracking-normal text-white"
+              className="pt-4 font-display text-2xl font-black tracking-normal text-white"
             >
               {block.text}
             </h2>

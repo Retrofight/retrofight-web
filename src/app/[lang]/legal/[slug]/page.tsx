@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import { MarkdownDocument } from "@/components/legal/MarkdownDocument";
 import { getLegalDocument, getLegalDocumentSlugs } from "@/lib/legal/documents";
 import { getDictionary, hasLocale, locales } from "../../dictionaries";
@@ -45,16 +46,17 @@ export default async function LegalPage({
   const dictionary = getDictionary(lang);
 
   return (
-    <main className="min-h-screen bg-dark-obsidian px-4 py-10 text-gray-100 sm:px-6 lg:px-8">
-      <article className="mx-auto max-w-4xl">
+    <main className="min-h-screen bg-dark-obsidian text-gray-100">
+      <article className="mx-auto flex max-w-4xl flex-col gap-8 px-5 py-10 sm:px-8 lg:py-14">
         <Link
           href={`/${lang}`}
-          className="mb-8 inline-flex rounded-sm border border-white/10 px-4 py-3 text-sm font-semibold uppercase text-zinc-300 transition hover:border-brand-purple-500 hover:text-white"
+          className="inline-flex w-fit items-center gap-2 text-sm font-semibold text-brand-purple-400 transition hover:text-white"
         >
+          <ArrowLeft className="h-4 w-4" />
           {dictionary.legal.back}
         </Link>
 
-        <div className="rounded-sm border border-white/10 bg-dark-card p-6 shadow-2xl shadow-black/40 sm:p-8">
+        <div className="border-t border-white/10 pt-8">
           <MarkdownDocument markdown={document.markdown} />
         </div>
       </article>

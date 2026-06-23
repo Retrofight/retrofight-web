@@ -64,12 +64,12 @@ export default function Hero({ lang, dictionary }: HeroProps) {
           <div className="flex flex-col justify-center">
             <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-sm border border-brand-purple-500/30 bg-brand-purple-950/60 px-3 py-2">
               <span className="h-2 w-2 bg-brand-purple-500" />
-              <span className="font-pixel text-[9px] uppercase tracking-widest text-brand-purple-400">
+              <span className="font-pixel text-[9px] tracking-widest text-brand-purple-400">
                 {home.badge}
               </span>
             </div>
 
-            <h1 className="font-display text-6xl font-black uppercase italic leading-none tracking-normal text-white sm:text-7xl lg:text-8xl">
+            <h1 className="font-display text-6xl font-black leading-none tracking-normal text-white sm:text-7xl lg:text-8xl">
               {home.title}
             </h1>
             <p className="mt-6 max-w-2xl text-xl font-semibold leading-relaxed text-zinc-200">
@@ -96,24 +96,24 @@ export default function Hero({ lang, dictionary }: HeroProps) {
                   key={href}
                   href={href}
                   dictionary={dictionary.downloadConsent}
-                  className={`inline-flex min-h-16 items-center justify-between gap-3 rounded-sm px-4 py-3 font-display text-xs font-black uppercase italic transition ${
+                  className={`inline-flex min-h-16 items-center justify-between gap-3 rounded-sm px-4 py-3 text-sm font-semibold transition ${
                     primary
                       ? "bg-brand-purple-500 text-[#071116] shadow-[0_12px_28px_rgba(34,211,238,0.16)] hover:bg-[#67e8f9]"
                       : "border border-white/10 bg-white/[0.04] text-white hover:border-brand-purple-500 hover:bg-brand-purple-500/10"
                   }`}
                 >
-                  <span className="inline-flex min-w-0 items-center gap-2">
+                  <span className="inline-flex min-w-0 items-center gap-2 text-left">
                     <Icon className="h-5 w-5 shrink-0" />
-                    <span className="truncate">{label}</span>
+                    <span>{label}</span>
                   </span>
-                  <span className="shrink-0 rounded-sm border border-white/10 bg-black/20 px-2 py-1 font-mono text-[10px] not-italic text-current">
+                  <span className="shrink-0 rounded-sm border border-white/10 bg-black/20 px-2 py-1 font-mono text-[10px] text-current">
                     {meta}
                   </span>
                 </DownloadConsentLink>
               ))}
               <Link
                 href={`/${lang}/wiki`}
-                className="inline-flex min-h-16 items-center justify-center gap-2 rounded-sm border border-white/10 px-4 py-3 font-display text-xs font-bold uppercase italic text-zinc-200 transition hover:border-brand-purple-500 hover:text-white sm:col-span-2"
+                className="inline-flex min-h-16 items-center justify-center gap-2 rounded-sm border border-white/10 px-4 py-3 text-sm font-semibold text-zinc-200 transition hover:border-brand-purple-500 hover:text-white sm:col-span-2"
               >
                 <Gamepad2 className="h-5 w-5" />
                 {home.howTo}
@@ -135,7 +135,7 @@ export default function Hero({ lang, dictionary }: HeroProps) {
                     className="object-cover"
                   />
                 </div>
-                <div className="grid grid-cols-3 border-t border-white/10 bg-black/70 text-center font-mono text-[10px] uppercase text-zinc-400">
+                <div className="grid grid-cols-3 border-t border-white/10 bg-black/70 text-center font-mono text-[10px] text-zinc-400">
                   {home.highlights.map((highlight, index) => (
                     <span
                       key={highlight}
@@ -166,7 +166,7 @@ export default function Hero({ lang, dictionary }: HeroProps) {
                         className="object-cover"
                       />
                     </div>
-                    <figcaption className="border-t border-white/10 px-2 py-2 text-center font-mono text-[9px] uppercase text-zinc-500">
+                    <figcaption className="border-t border-white/10 px-2 py-2 text-center font-mono text-[9px] text-zinc-500">
                       {shot.label}
                     </figcaption>
                   </figure>
@@ -182,7 +182,7 @@ export default function Hero({ lang, dictionary }: HeroProps) {
           {home.cards.map((card) => (
             <article key={card.title} className="rounded-sm border border-white/10 bg-dark-card p-6">
               <ShieldCheck className="mb-5 h-6 w-6 text-brand-purple-400" />
-              <h2 className="font-display text-xl font-extrabold uppercase italic tracking-normal text-white">
+              <h2 className="font-display text-xl font-extrabold tracking-normal text-white">
                 {card.title}
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-zinc-400">{card.text}</p>
@@ -194,10 +194,10 @@ export default function Hero({ lang, dictionary }: HeroProps) {
       <section className="bg-dark-obsidian py-16">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
           <div>
-            <span className="font-pixel text-[9px] uppercase tracking-widest text-brand-purple-400">
+            <span className="font-pixel text-[9px] tracking-widest text-brand-purple-400">
               RetroFight
             </span>
-            <h2 className="mt-3 font-display text-4xl font-black uppercase italic tracking-normal text-white">
+            <h2 className="mt-3 font-display text-4xl font-black tracking-normal text-white">
               {home.projectTitle}
             </h2>
           </div>
@@ -214,7 +214,7 @@ export default function Hero({ lang, dictionary }: HeroProps) {
               href={dictionary.githubOrg}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-sm border border-white/10 px-4 py-3 text-sm font-semibold uppercase text-zinc-200 transition hover:border-brand-purple-500 hover:text-white"
+              className="inline-flex items-center gap-2 rounded-sm border border-white/10 px-4 py-3 text-sm font-semibold text-zinc-200 transition hover:border-brand-purple-500 hover:text-white"
             >
               <Code className="h-4 w-4" />
               {home.githubCta}

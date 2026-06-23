@@ -77,6 +77,7 @@ export const dictionaries = {
         "Email confirmed, but this browser could not complete automatic sign-in. Sign in with your email and password.",
       checkEmail: "Check your inbox to confirm the profile before signing in.",
       signedOut: "You have been signed out.",
+      accountDeleted: "Your account has been deleted.",
       passwordReset: "Password updated. Sign in with the new password.",
       forgotPassword: "Forgot password?",
       acceptLegalPrefix: "I have read and accept the",
@@ -135,6 +136,24 @@ export const dictionaries = {
         current_invalid: "The current password is not correct.",
         policy: "The new password does not match the configured security policy.",
         updated: "Password updated.",
+      },
+      accountMessages: {
+        email_mismatch: "The confirmation email does not match your account.",
+        delete_failed: "The account could not be deleted. Try again later.",
+        admin_unavailable:
+          "Account deletion is not configured for this environment.",
+      },
+      deleteAccount: {
+        title: "Delete account",
+        description:
+          "Permanently remove your RetroFight account and sign out from this browser.",
+        open: "Delete account",
+        modalTitle: "Delete your account",
+        disclaimer:
+          "This action permanently deletes your RetroFight account. Online access, profile identity, and authentication data associated with this account will no longer be available. This cannot be undone.",
+        confirmLabel: "Type your email address to confirm",
+        cancel: "Cancel",
+        confirm: "Delete account",
       },
     },
     home: {
@@ -362,6 +381,7 @@ export const dictionaries = {
         "Email confermata, ma questo browser non ha completato l'accesso automatico. Accedi con email e password.",
       checkEmail: "Controlla la mail e conferma il profilo prima di accedere.",
       signedOut: "Logout effettuato.",
+      accountDeleted: "Il tuo account e' stato eliminato.",
       passwordReset: "Password aggiornata. Accedi con la nuova password.",
       forgotPassword: "Password dimenticata?",
       acceptLegalPrefix: "Ho letto e accetto i",
@@ -421,6 +441,26 @@ export const dictionaries = {
         policy:
           "La nuova password non rispetta la policy di sicurezza configurata.",
         updated: "Password aggiornata.",
+      },
+      accountMessages: {
+        email_mismatch:
+          "L'email di conferma non corrisponde al tuo account.",
+        delete_failed:
+          "Non e' stato possibile eliminare l'account. Riprova piu' tardi.",
+        admin_unavailable:
+          "La rimozione account non e' configurata per questo ambiente.",
+      },
+      deleteAccount: {
+        title: "Elimina account",
+        description:
+          "Rimuovi definitivamente il tuo account RetroFight ed esci da questo browser.",
+        open: "Elimina account",
+        modalTitle: "Elimina il tuo account",
+        disclaimer:
+          "Questa azione elimina definitivamente il tuo account RetroFight. Accesso online, identita' profilo e dati di autenticazione associati all'account non saranno piu' disponibili. L'operazione non puo' essere annullata.",
+        confirmLabel: "Inserisci il tuo indirizzo email per confermare",
+        cancel: "Annulla",
+        confirm: "Elimina account",
       },
     },
     home: {

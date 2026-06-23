@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getPrivacyConsentMetadata } from "@/lib/privacy/consent";
 import type { Locale } from "../dictionaries";
 
 function cleanText(value: FormDataEntryValue | null) {
@@ -81,11 +82,6 @@ export async function signUp(lang: Locale, formData: FormData) {
     redirectToLogin(lang, "consent_required");
   }
 
-  const legalConsentText =
-    lang === "it"
-      ? "Ho letto e accetto i Termini di utilizzo e la Privacy Policy."
-      : "I have read and accept the Terms of Use and Privacy Policy.";
-
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -94,12 +90,7 @@ export async function signUp(lang: Locale, formData: FormData) {
       emailRedirectTo: await getAuthRedirectUrl(lang),
       data: {
         display_name: displayName || email.split("@")[0],
-        legal_consent: true,
-        legal_consent_accepted_at: new Date().toISOString(),
-        legal_consent_locale: lang,
-        legal_consent_statement: legalConsentText,
-        terms_of_use_version: "2026-06-23",
-        privacy_policy_version: "2026-06-23",
+        ...getPrivacyConsentMetadata(lang),
       },
     },
   });

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import type { Locale } from "../dictionaries";
 
@@ -59,4 +60,36 @@ export async function updatePassword(lang: Locale, formData: FormData) {
 
   revalidatePath(`/${lang}/profile`);
   redirect(`/${lang}/profile?password=updated`);
+}
+
+export async function deleteAccount(lang: Locale, formData: FormData) {
+  const confirmEmail = cleanText(formData.get("confirmEmail")).toLowerCase();
+  const supabase = await createClient();
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+  const user = userData.user;
+  const email = user?.email?.toLowerCase();
+
+  if (userError || !user || !email) {
+    redirect(`/${lang}/login`);
+  }
+
+  if (confirmEmail !== email) {
+    redirect(`/${lang}/profile?account=email_mismatch`);
+  }
+
+  let admin;
+  try {
+    admin = createAdminClient();
+  } catch {
+    redirect(`/${lang}/profile?account=admin_unavailable`);
+  }
+
+  const { error } = await admin.auth.admin.deleteUser(user.id);
+
+  if (error) {
+    redirect(`/${lang}/profile?account=delete_failed`);
+  }
+
+  await supabase.auth.signOut();
+  redirect(`/${lang}/login?notice=account_deleted`);
 }

@@ -70,9 +70,11 @@ export default function AuthPanel({
                 : notice === "check_email"
                   ? text.checkEmail
                   : notice === "signed_out"
-                    ? text.signedOut
-                    : notice === "password_reset"
-                      ? text.passwordReset
+                  ? text.signedOut
+                  : notice === "password_reset"
+                    ? text.passwordReset
+                    : notice === "account_deleted"
+                      ? text.accountDeleted
                       : null;
 
   return (

@@ -44,6 +44,7 @@ Creare un file `.env.local` locale con:
 ```txt
 NEXT_PUBLIC_SUPABASE_URL=https://<project-ref>.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
+SUPABASE_SERVICE_ROLE_KEY=sb_secret_...
 NEXT_PUBLIC_SITE_URL=http://localhost:3001
 ```
 
@@ -51,6 +52,7 @@ Su Vercel configurare le stesse variabili in `Project Settings > Environment Var
 
 - `NEXT_PUBLIC_SUPABASE_URL`: Project URL Supabase.
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`: publishable key Supabase.
+- `SUPABASE_SERVICE_ROLE_KEY`: service role key Supabase, usata solo lato server per rimuovere definitivamente l'account utente tramite Admin API.
 - `NEXT_PUBLIC_SITE_URL`: dominio pubblico del sito in produzione, ad esempio `https://retrofight.example`.
 
 Per preview deploy, Vercel espone anche `VERCEL_URL`; il codice la usa come fallback per costruire il redirect auth, ma il dominio production va comunque inserito in `NEXT_PUBLIC_SITE_URL`.

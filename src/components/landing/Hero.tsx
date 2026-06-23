@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { DownloadConsentLink } from "@/components/legal/DownloadConsentLink";
 import {
   Archive,
   Code,
@@ -108,7 +109,7 @@ export default function Hero({ lang, dictionary }: HeroProps) {
 
             <div id="downloads" className="mt-8 grid gap-3 sm:grid-cols-2">
               {downloadLinks.map(({ href, label, meta, Icon, primary }) => (
-                <a
+                <DownloadConsentLink
                   key={href}
                   href={href}
                   className={`inline-flex min-h-16 items-center justify-between gap-3 rounded-sm px-4 py-3 font-display text-xs font-black uppercase italic transition ${
@@ -124,7 +125,7 @@ export default function Hero({ lang, dictionary }: HeroProps) {
                   <span className="shrink-0 rounded-sm border border-white/10 bg-black/20 px-2 py-1 font-mono text-[10px] not-italic text-current">
                     {meta}
                   </span>
-                </a>
+                </DownloadConsentLink>
               ))}
               <Link
                 href={`/${lang}/wiki`}

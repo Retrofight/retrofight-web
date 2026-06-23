@@ -39,6 +39,10 @@ export const dictionaries = {
         "RetroFight Project. Game files and trademarks belong to their respective owners.",
       backToTop: "Back to top",
     },
+    legal: {
+      back: "Back to home",
+      navLabel: "Legal pages",
+    },
     auth: {
       eyebrow: "RetroFight profile",
       title: "Sign in or create your player profile",
@@ -286,6 +290,10 @@ export const dictionaries = {
       copyright:
         "RetroFight Project. I file di gioco e i marchi appartengono ai rispettivi proprietari.",
       backToTop: "Torna su",
+    },
+    legal: {
+      back: "Torna alla home",
+      navLabel: "Pagine legali",
     },
     auth: {
       eyebrow: "Profilo RetroFight",

@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUp, Code, Download } from "lucide-react";
 import type { Locale, dictionaries } from "@/app/[lang]/dictionaries";
+import { DownloadConsentLink } from "@/components/legal/DownloadConsentLink";
+import { legalDocuments } from "@/lib/legal/documents";
 
 type FooterProps = {
   lang: Locale;
@@ -33,20 +35,20 @@ export default function Footer({ lang, dictionary }: FooterProps) {
           </Link>
 
           <div className="flex flex-wrap gap-3">
-            <a
+            <DownloadConsentLink
               href={dictionary.installerUrl}
               className="inline-flex items-center gap-2 rounded-sm border border-white/10 px-3 py-2 font-semibold text-zinc-300 transition hover:border-brand-purple-500 hover:text-white"
             >
               <Download className="h-4 w-4" />
               Windows
-            </a>
-            <a
+            </DownloadConsentLink>
+            <DownloadConsentLink
               href={dictionary.linuxAppImageUrl}
               className="inline-flex items-center gap-2 rounded-sm border border-white/10 px-3 py-2 font-semibold text-zinc-300 transition hover:border-brand-purple-500 hover:text-white"
             >
               <Download className="h-4 w-4" />
               Linux
-            </a>
+            </DownloadConsentLink>
             <a
               href={dictionary.releaseUrl}
               target="_blank"
@@ -66,9 +68,22 @@ export default function Footer({ lang, dictionary }: FooterProps) {
           </div>
         </div>
 
-        <p>
-          Copyright {new Date().getFullYear()} {dictionary.footer.copyright}
-        </p>
+        <div className="flex flex-col gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            Copyright {new Date().getFullYear()} {dictionary.footer.copyright}
+          </p>
+          <nav className="flex flex-wrap gap-x-4 gap-y-2" aria-label={dictionary.legal.navLabel}>
+            {legalDocuments.map((document) => (
+              <Link
+                key={document.slug}
+                href={`/${lang}/legal/${document.slug}`}
+                className="font-semibold text-zinc-400 transition hover:text-white"
+              >
+                {document.footerLabel}
+              </Link>
+            ))}
+          </nav>
+        </div>
       </div>
     </footer>
   );

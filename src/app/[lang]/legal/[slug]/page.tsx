@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MarkdownDocument } from "@/components/legal/MarkdownDocument";
-import { getLegalDocument, legalDocuments } from "@/lib/legal/documents";
+import { getLegalDocument, getLegalDocumentSlugs } from "@/lib/legal/documents";
 import { getDictionary, hasLocale, locales } from "../../dictionaries";
 
 export function generateStaticParams() {
   return locales.flatMap((lang) =>
-    legalDocuments.map((document) => ({
+    getLegalDocumentSlugs().map((slug) => ({
       lang,
-      slug: document.slug
+      slug
     }))
   );
 }
@@ -18,8 +18,8 @@ export async function generateMetadata({
 }: {
   params: Promise<{ lang: string; slug: string }>;
 }) {
-  const { slug } = await params;
-  const document = getLegalDocument(slug);
+  const { lang, slug } = await params;
+  const document = getLegalDocument(hasLocale(lang) ? lang : "en", slug);
 
   return {
     title: document ? `${document.title} | RetroFight` : "RetroFight Legal"
@@ -37,7 +37,7 @@ export default async function LegalPage({
     notFound();
   }
 
-  const document = getLegalDocument(slug);
+  const document = getLegalDocument(lang, slug);
   if (!document) {
     notFound();
   }

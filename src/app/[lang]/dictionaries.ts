@@ -1,3 +1,5 @@
+import { downloadDisclaimerMarkdown } from "@/lib/legal/documents";
+
 export const locales = ["en", "it"] as const;
 
 export type Locale = (typeof locales)[number];
@@ -43,6 +45,13 @@ export const dictionaries = {
       back: "Back to home",
       navLabel: "Legal pages",
     },
+    downloadConsent: {
+      eyebrow: "Download",
+      fallbackFileName: "RetroFight download",
+      cancel: "Cancel",
+      agree: "I understand and agree",
+      markdown: downloadDisclaimerMarkdown.en,
+    },
     auth: {
       eyebrow: "RetroFight profile",
       title: "Sign in or create your player profile",
@@ -56,6 +65,8 @@ export const dictionaries = {
       displayNameHint: "Optional",
       back: "Back to home",
       invalid: "Check your email and password, then try again.",
+      consentRequired:
+        "Read and accept the Terms of Use and Privacy Policy to register.",
       signupFailed:
         "Registration did not complete. Try another email or password.",
       callbackFailed:
@@ -68,6 +79,11 @@ export const dictionaries = {
       signedOut: "You have been signed out.",
       passwordReset: "Password updated. Sign in with the new password.",
       forgotPassword: "Forgot password?",
+      acceptLegalPrefix: "I have read and accept the",
+      acceptLegalMiddle: "and",
+      acceptLegalSuffix: ".",
+      termsOfUse: "Terms of Use",
+      privacyPolicy: "Privacy Policy",
     },
     forgotPassword: {
       eyebrow: "Profile recovery",
@@ -134,6 +150,25 @@ export const dictionaries = {
       downloadLinuxAppImage: "Linux AppImage",
       downloadLinuxDeb: "Linux deb",
       howTo: "Read how to play",
+      heroImageAlt: "RetroFight game selection screen",
+      highlights: ["Windows + Linux", "1v1", "UDP direct"],
+      screenshots: [
+        {
+          src: "/request-match.png",
+          alt: "RetroFight match request screen",
+          label: "Challenge",
+        },
+        {
+          src: "/game-test-running.png",
+          alt: "RetroFight test mode running",
+          label: "Runtime",
+        },
+        {
+          src: "/login-screen.png",
+          alt: "RetroFight login screen",
+          label: "Profile",
+        },
+      ],
       cards: [
         {
           title: "Beta for testing",
@@ -295,6 +330,13 @@ export const dictionaries = {
       back: "Torna alla home",
       navLabel: "Pagine legali",
     },
+    downloadConsent: {
+      eyebrow: "Download",
+      fallbackFileName: "Download RetroFight",
+      cancel: "Annulla",
+      agree: "Ho capito e accetto",
+      markdown: downloadDisclaimerMarkdown.it,
+    },
     auth: {
       eyebrow: "Profilo RetroFight",
       title: "Accedi o crea il tuo profilo player",
@@ -308,6 +350,8 @@ export const dictionaries = {
       displayNameHint: "Opzionale",
       back: "Torna alla home",
       invalid: "Controlla email e password, poi riprova.",
+      consentRequired:
+        "Leggi e accetta i Termini di utilizzo e la Privacy Policy per registrarti.",
       signupFailed:
         "La registrazione non e' riuscita. Prova un'altra email o password.",
       callbackFailed:
@@ -320,6 +364,11 @@ export const dictionaries = {
       signedOut: "Logout effettuato.",
       passwordReset: "Password aggiornata. Accedi con la nuova password.",
       forgotPassword: "Password dimenticata?",
+      acceptLegalPrefix: "Ho letto e accetto i",
+      acceptLegalMiddle: "e la",
+      acceptLegalSuffix: ".",
+      termsOfUse: "Termini di utilizzo",
+      privacyPolicy: "Privacy Policy",
     },
     forgotPassword: {
       eyebrow: "Recupero profilo",
@@ -387,6 +436,25 @@ export const dictionaries = {
       downloadLinuxAppImage: "AppImage Linux",
       downloadLinuxDeb: "Deb Linux",
       howTo: "Leggi come giocare",
+      heroImageAlt: "Schermata di selezione giochi di RetroFight",
+      highlights: ["Windows + Linux", "1v1", "UDP direct"],
+      screenshots: [
+        {
+          src: "/request-match.png",
+          alt: "Schermata richiesta match di RetroFight",
+          label: "Sfida",
+        },
+        {
+          src: "/game-test-running.png",
+          alt: "Modalita' test di RetroFight in esecuzione",
+          label: "Runtime",
+        },
+        {
+          src: "/login-screen.png",
+          alt: "Schermata login di RetroFight",
+          label: "Profilo",
+        },
+      ],
       cards: [
         {
           title: "Beta per test",

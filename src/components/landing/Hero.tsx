@@ -16,23 +16,6 @@ import {
 import type { Locale, dictionaries } from "@/app/[lang]/dictionaries";
 
 const heroImg = "/lobby-games-selection.png";
-const screenshotStrip = [
-  {
-    src: "/request-match.png",
-    alt: "RetroFight match request screen",
-    label: "Challenge",
-  },
-  {
-    src: "/game-test-running.png",
-    alt: "RetroFight test mode running",
-    label: "Runtime",
-  },
-  {
-    src: "/login-screen.png",
-    alt: "RetroFight login screen",
-    label: "Profile",
-  },
-];
 
 type HeroProps = {
   lang: Locale;
@@ -112,6 +95,7 @@ export default function Hero({ lang, dictionary }: HeroProps) {
                 <DownloadConsentLink
                   key={href}
                   href={href}
+                  dictionary={dictionary.downloadConsent}
                   className={`inline-flex min-h-16 items-center justify-between gap-3 rounded-sm px-4 py-3 font-display text-xs font-black uppercase italic transition ${
                     primary
                       ? "bg-brand-purple-500 text-[#071116] shadow-[0_12px_28px_rgba(34,211,238,0.16)] hover:bg-[#67e8f9]"
@@ -144,7 +128,7 @@ export default function Hero({ lang, dictionary }: HeroProps) {
                 <div className="relative aspect-[1903/975] w-full">
                   <Image
                     src={heroImg}
-                    alt="RetroFight game selection screen"
+                    alt={home.heroImageAlt}
                     fill
                     priority
                     sizes="(min-width: 1024px) 640px, 100vw"
@@ -152,16 +136,23 @@ export default function Hero({ lang, dictionary }: HeroProps) {
                   />
                 </div>
                 <div className="grid grid-cols-3 border-t border-white/10 bg-black/70 text-center font-mono text-[10px] uppercase text-zinc-400">
-                  <span className="border-r border-white/10 px-2 py-3 text-brand-purple-400">
-                    Windows + Linux
-                  </span>
-                  <span className="border-r border-white/10 px-2 py-3">1v1</span>
-                  <span className="px-2 py-3">UDP direct</span>
+                  {home.highlights.map((highlight, index) => (
+                    <span
+                      key={highlight}
+                      className={`px-2 py-3 ${
+                        index < home.highlights.length - 1
+                          ? "border-r border-white/10"
+                          : ""
+                      } ${index === 0 ? "text-brand-purple-400" : ""}`}
+                    >
+                      {highlight}
+                    </span>
+                  ))}
                 </div>
               </div>
 
               <div className="grid grid-cols-3 gap-3">
-                {screenshotStrip.map((shot) => (
+                {home.screenshots.map((shot) => (
                   <figure
                     key={shot.src}
                     className="overflow-hidden rounded-sm border border-white/10 bg-dark-card"

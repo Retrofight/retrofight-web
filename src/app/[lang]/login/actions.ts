@@ -39,7 +39,10 @@ async function getPasswordRecoveryRedirectUrl(lang: Locale) {
   return `${siteUrl}/auth/callback?next=/${lang}/reset-password`;
 }
 
-function redirectToLogin(lang: Locale, key: "invalid" | "signup_failed") {
+function redirectToLogin(
+  lang: Locale,
+  key: "invalid" | "signup_failed" | "consent_required",
+) {
   redirect(`/${lang}/login?error=${key}`);
 }
 
@@ -68,10 +71,20 @@ export async function signUp(lang: Locale, formData: FormData) {
   const email = cleanText(formData.get("email"));
   const password = cleanText(formData.get("password"));
   const displayName = cleanText(formData.get("displayName"));
+  const legalConsent = formData.get("legalConsent") === "accepted";
 
   if (!email || !password) {
     redirectToLogin(lang, "invalid");
   }
+
+  if (!legalConsent) {
+    redirectToLogin(lang, "consent_required");
+  }
+
+  const legalConsentText =
+    lang === "it"
+      ? "Ho letto e accetto i Termini di utilizzo e la Privacy Policy."
+      : "I have read and accept the Terms of Use and Privacy Policy.";
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({
@@ -81,6 +94,12 @@ export async function signUp(lang: Locale, formData: FormData) {
       emailRedirectTo: await getAuthRedirectUrl(lang),
       data: {
         display_name: displayName || email.split("@")[0],
+        legal_consent: true,
+        legal_consent_accepted_at: new Date().toISOString(),
+        legal_consent_locale: lang,
+        legal_consent_statement: legalConsentText,
+        terms_of_use_version: "2026-06-23",
+        privacy_policy_version: "2026-06-23",
       },
     },
   });

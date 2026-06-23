@@ -1,6 +1,9 @@
+export type LegalLocale = "en" | "it";
+
 export type LegalDocumentSlug =
   | "legal-notice"
   | "terms-of-use"
+  | "privacy-policy"
   | "third-party-content"
   | "copyright-policy"
   | "legal-faq";
@@ -12,7 +15,17 @@ export type LegalDocument = {
   markdown: string;
 };
 
-export const downloadDisclaimerMarkdown = `# Important Legal Notice
+const legalDocumentSlugs: LegalDocumentSlug[] = [
+  "legal-notice",
+  "terms-of-use",
+  "privacy-policy",
+  "third-party-content",
+  "copyright-policy",
+  "legal-faq",
+];
+
+export const downloadDisclaimerMarkdown: Record<LegalLocale, string> = {
+  en: `# Important Legal Notice
 
 RetroFight is software only.
 
@@ -22,14 +35,27 @@ RetroFight does not support, encourage, promote, or facilitate software piracy o
 
 Users are solely responsible for ensuring that any content used with RetroFight is legally acquired and lawfully used.
 
-By downloading, installing, or using RetroFight, you acknowledge and accept full responsibility for your use of the software.`;
+By downloading, installing, or using RetroFight, you acknowledge and accept full responsibility for your use of the software.`,
+  it: `# Avviso legale importante
 
-export const legalDocuments: LegalDocument[] = [
-  {
-    slug: "legal-notice",
-    title: "Legal Notice",
-    footerLabel: "Legal Notice",
-    markdown: `# Legal Notice
+RetroFight e' solo software.
+
+RetroFight non include, fornisce, ospita, distribuisce o rende disponibili ROM, file BIOS, giochi, firmware, software commerciale, archivi di giochi protetti da copyright o contenuti protetti da copyright.
+
+RetroFight non supporta, incoraggia, promuove o facilita pirateria software o violazioni del copyright.
+
+Gli utenti sono gli unici responsabili di verificare che ogni contenuto usato con RetroFight sia acquisito legalmente e usato in modo lecito.
+
+Scaricando, installando o usando RetroFight, riconosci e accetti la piena responsabilita' del tuo uso del software.`,
+};
+
+const legalDocumentsByLocale: Record<LegalLocale, LegalDocument[]> = {
+  en: [
+    {
+      slug: "legal-notice",
+      title: "Legal Notice",
+      footerLabel: "Legal Notice",
+      markdown: `# Legal Notice
 
 Last Updated: 23/06/2026
 
@@ -53,13 +79,13 @@ Users are solely responsible for ensuring that any content used with RetroFight 
 
 The operators, developers, contributors, and maintainers of RetroFight do not encourage, endorse, support, or promote copyright infringement, software piracy, unauthorized copying, unauthorized distribution, or any unlawful activity.
 
-RetroFight reserves the right to update this Legal Notice at any time.`
-  },
-  {
-    slug: "terms-of-use",
-    title: "Terms of Use",
-    footerLabel: "Terms of Use",
-    markdown: `# Terms of Use
+RetroFight reserves the right to update this Legal Notice at any time.`,
+    },
+    {
+      slug: "terms-of-use",
+      title: "Terms of Use",
+      footerLabel: "Terms of Use",
+      markdown: `# Terms of Use
 
 Last Updated: 23/06/2026
 
@@ -139,13 +165,97 @@ RetroFight may modify these Terms at any time. Continued use of the software con
 
 ## 9. Governing Law
 
-These Terms shall be interpreted and enforced in accordance with applicable laws and regulations.`
-  },
-  {
-    slug: "third-party-content",
-    title: "Third-Party Content Notice",
-    footerLabel: "Third-Party Content",
-    markdown: `# Third-Party Content Notice
+These Terms shall be interpreted and enforced in accordance with applicable laws and regulations.`,
+    },
+    {
+      slug: "privacy-policy",
+      title: "Privacy Policy",
+      footerLabel: "Privacy Policy",
+      markdown: `# Privacy Policy
+
+Last Updated: 23/06/2026
+
+## 1. Data Controller
+
+RetroFight
+
+Contact Email:
+[stefanopascazi@gmail.com](mailto:stefanopascazi@gmail.com)
+
+## 2. Information We Collect
+
+When creating an account, RetroFight may collect:
+
+- Email address
+- Display name
+- Authentication credentials managed through Supabase Authentication
+
+Passwords are never stored in plain text by RetroFight.
+
+## 3. Purpose of Processing
+
+Personal data is processed exclusively for:
+
+- Account creation
+- User authentication
+- Account management
+- Access to RetroFight online services
+- Security and abuse prevention
+- Compliance with legal obligations
+
+RetroFight does not use personal data for advertising, marketing, profiling, or automated decision-making.
+
+## 4. Legal Basis
+
+Personal data is processed for the performance of the service requested by the user and for the legitimate operation and security of the RetroFight platform.
+
+## 5. Data Storage
+
+User account data is stored using Supabase infrastructure located within the European Union.
+
+Reasonable technical and organizational measures are implemented to protect personal data.
+
+## 6. Data Sharing
+
+RetroFight does not sell, rent, trade, or disclose personal data to third parties except where required by law or necessary for the operation of the service.
+
+## 7. Data Retention
+
+Personal data is retained only for as long as necessary to provide the service or comply with legal obligations.
+
+Users may request account deletion at any time.
+
+## 8. User Rights
+
+Subject to applicable law, users may request:
+
+- Access to their personal data
+- Correction of inaccurate data
+- Deletion of personal data
+- Restriction of processing
+- Data portability where applicable
+
+Requests may be submitted to:
+
+[stefanopascazi@gmail.com](mailto:stefanopascazi@gmail.com)
+
+## 9. Future Online Features
+
+RetroFight may introduce optional online features such as rankings, match history, replay sharing, statistics, and community functionality.
+
+If such features require additional processing of personal data, this Privacy Policy will be updated before those features become available.
+
+## 10. Changes to this Policy
+
+RetroFight may update this Privacy Policy from time to time.
+
+Users are encouraged to review this page periodically.`,
+    },
+    {
+      slug: "third-party-content",
+      title: "Third-Party Content Notice",
+      footerLabel: "Third-Party Content",
+      markdown: `# Third-Party Content Notice
 
 RetroFight may display game titles, screenshots, artwork, thumbnails, metadata, identifiers, compatibility information, and other descriptive materials originating from third-party sources.
 
@@ -165,13 +275,13 @@ The display of such materials does not imply affiliation, sponsorship, endorseme
 
 Where applicable, metadata and descriptive materials may originate from publicly available databases, community-maintained repositories, or third-party metadata providers.
 
-If you believe any displayed material infringes your intellectual property rights, please contact us through the procedures described in the Copyright Policy.`
-  },
-  {
-    slug: "copyright-policy",
-    title: "Copyright Policy",
-    footerLabel: "Copyright Policy",
-    markdown: `# Copyright Policy
+If you believe any displayed material infringes your intellectual property rights, please contact us through the procedures described in the Copyright Policy.`,
+    },
+    {
+      slug: "copyright-policy",
+      title: "Copyright Policy",
+      footerLabel: "Copyright Policy",
+      markdown: `# Copyright Policy
 
 Last Updated: 23/06/2026
 
@@ -192,17 +302,17 @@ If you believe that content, metadata, artwork, screenshots, thumbnails, or othe
 
 Reports may be submitted to:
 
-stefanopascazi@gmail.com
+[stefanopascazi@gmail.com](mailto:stefanopascazi@gmail.com)
 
 RetroFight will review all legitimate requests and, where appropriate, take reasonable action including modification, removal, replacement, or restriction of access to the disputed material.
 
-RetroFight reserves the right to request additional information before taking action.`
-  },
-  {
-    slug: "legal-faq",
-    title: "Legal FAQ",
-    footerLabel: "Legal FAQ",
-    markdown: `# Legal FAQ
+RetroFight reserves the right to request additional information before taking action.`,
+    },
+    {
+      slug: "legal-faq",
+      title: "Legal FAQ",
+      footerLabel: "Legal FAQ",
+      markdown: `# Legal FAQ
 
 ## Does RetroFight provide ROMs?
 
@@ -248,10 +358,333 @@ RetroFight is an independent project and is not affiliated with, endorsed by, sp
 
 RetroFight does not provide guidance, links, services, or instructions regarding the acquisition of copyrighted content.
 
-Users are solely responsible for ensuring they possess the legal rights necessary to use any content with the software.`
-  }
-];
+Users are solely responsible for ensuring they possess the legal rights necessary to use any content with the software.`,
+    },
+  ],
+  it: [
+    {
+      slug: "legal-notice",
+      title: "Avviso legale",
+      footerLabel: "Avviso legale",
+      markdown: `# Avviso legale
 
-export function getLegalDocument(slug: string) {
-  return legalDocuments.find((document) => document.slug === slug) || null;
+Ultimo aggiornamento: 23/06/2026
+
+RetroFight e' un progetto software indipendente che fornisce funzionalita' di emulazione e netplay online.
+
+RetroFight non fornisce, ospita, distribuisce, vende, concede in sublicenza, indicizza, aggrega, facilita l'accesso o rende disponibili ROM, file BIOS, firmware, archivi di giochi, giochi commerciali, software protetto da copyright o altri contenuti protetti da copyright.
+
+RetroFight e' distribuito esclusivamente come software.
+
+Il software ha lo scopo di consentire agli utenti di eseguire e sincronizzare contenuti compatibili che sono legalmente autorizzati a usare.
+
+Titoli di giochi, nomi di sistemi, marchi, screenshot, artwork, metadati, miniature e altri materiali descrittivi mostrati da RetroFight sono usati esclusivamente per identificazione, compatibilita', catalogazione, informazione e interfaccia utente.
+
+Tutti i marchi, marchi registrati, copyright, loghi, titoli di giochi, artwork e relative proprieta' intellettuali restano di proprieta' dei rispettivi titolari.
+
+RetroFight non rivendica la proprieta' di alcuna proprieta' intellettuale di terzi citata o mostrata dal software.
+
+RetroFight non e' affiliato, approvato, sponsorizzato o autorizzato da editori, sviluppatori, produttori di console, titolari di copyright, titolari di marchi o altri aventi diritto, salvo diversa indicazione esplicita.
+
+Gli utenti sono gli unici responsabili di verificare che ogni contenuto usato con RetroFight sia acquisito e usato in modo lecito secondo le leggi e i regolamenti applicabili.
+
+Gli operatori, sviluppatori, contributor e maintainer di RetroFight non incoraggiano, approvano, supportano o promuovono violazioni del copyright, pirateria software, copie non autorizzate, distribuzione non autorizzata o attivita' illecite.
+
+RetroFight si riserva il diritto di aggiornare questo Avviso legale in qualsiasi momento.`,
+    },
+    {
+      slug: "terms-of-use",
+      title: "Termini di utilizzo",
+      footerLabel: "Termini di utilizzo",
+      markdown: `# Termini di utilizzo
+
+Ultimo aggiornamento: 23/06/2026
+
+Scaricando, installando, accedendo o usando RetroFight, accetti questi Termini di utilizzo.
+
+## 1. Responsabilita' dell'utente
+
+Sei l'unico responsabile di tutti i contenuti usati con RetroFight.
+
+Devi possedere tutti i diritti, licenze, titoli di proprieta' o permessi necessari per usare qualsiasi ROM, BIOS, firmware, immagine disco, asset di gioco, salvataggio o altro contenuto caricato tramite il software.
+
+## 2. Nessuna distribuzione di contenuti
+
+RetroFight non include, fornisce, distribuisce, ospita, vende, concede in sublicenza, aggrega, indicizza o facilita l'accesso a:
+
+- ROM
+- File BIOS
+- Giochi commerciali
+- Software protetto da copyright
+- File firmware
+- Immagini disco
+- Archivi di giochi protetti da copyright
+
+RetroFight funziona esclusivamente come software.
+
+## 3. Usi vietati
+
+Accetti di non usare RetroFight per:
+
+- Violazione del copyright
+- Distribuzione non autorizzata di opere protette da copyright
+- Pirateria software
+- Elusione di misure tecnologiche di protezione
+- Distribuzione di raccolte ROM
+- Distribuzione di raccolte BIOS
+- Condivisione non autorizzata di contenuti protetti da copyright
+- Qualsiasi attivita' vietata dalla legge applicabile
+
+## 4. Proprieta' intellettuale di terzi
+
+RetroFight puo' mostrare titoli di giochi, screenshot, miniature, artwork, metadati, identificatori, informazioni di compatibilita' o altri materiali descrittivi esclusivamente per finalita' di identificazione e compatibilita'.
+
+Tutti i diritti relativi a tali materiali restano dei rispettivi titolari.
+
+Nulla in RetroFight deve essere interpretato come trasferimento di proprieta' o concessione di diritti su proprieta' intellettuale di terzi.
+
+## 5. Nessuna garanzia
+
+RetroFight e' fornito "COSI' COM'E'" e "COME DISPONIBILE".
+
+Il software e' fornito senza garanzie di alcun tipo, espresse o implicite, incluse ma non limitate a garanzie di commerciabilita', idoneita' a uno scopo particolare, titolarita', non violazione, affidabilita' o disponibilita'.
+
+## 6. Limitazione di responsabilita'
+
+Nei limiti massimi consentiti dalla legge applicabile, sviluppatori, contributor, maintainer, operatori e affiliati di RetroFight non saranno responsabili per:
+
+- Danni diretti
+- Danni indiretti
+- Danni incidentali
+- Danni speciali
+- Danni consequenziali
+- Perdita di profitti
+- Perdita di dati
+- Interruzioni del servizio
+- Uso improprio del software da parte degli utenti
+- Violazioni del copyright commesse dagli utenti
+
+Gli utenti si assumono ogni responsabilita' derivante dall'uso del software.
+
+## 7. Cessazione
+
+RetroFight puo' limitare, sospendere o terminare l'accesso ai servizi associati per gli utenti che violano questi Termini.
+
+## 8. Modifiche
+
+RetroFight puo' modificare questi Termini in qualsiasi momento. L'uso continuato del software costituisce accettazione delle modifiche.
+
+## 9. Legge applicabile
+
+Questi Termini saranno interpretati e applicati secondo le leggi e i regolamenti applicabili.`,
+    },
+    {
+      slug: "privacy-policy",
+      title: "Privacy Policy",
+      footerLabel: "Privacy Policy",
+      markdown: `# Privacy Policy
+
+Ultimo aggiornamento: 23/06/2026
+
+## 1. Titolare del trattamento
+
+RetroFight
+
+Email di contatto:
+[stefanopascazi@gmail.com](mailto:stefanopascazi@gmail.com)
+
+## 2. Informazioni raccolte
+
+Durante la creazione di un account, RetroFight puo' raccogliere:
+
+- Indirizzo email
+- Nome visualizzato
+- Credenziali di autenticazione gestite tramite Supabase Authentication
+
+Le password non sono mai salvate in chiaro da RetroFight.
+
+## 3. Finalita' del trattamento
+
+I dati personali sono trattati esclusivamente per:
+
+- Creazione dell'account
+- Autenticazione dell'utente
+- Gestione dell'account
+- Accesso ai servizi online di RetroFight
+- Sicurezza e prevenzione degli abusi
+- Adempimento di obblighi legali
+
+RetroFight non usa dati personali per pubblicita', marketing, profilazione o decisioni automatizzate.
+
+## 4. Base giuridica
+
+I dati personali sono trattati per l'esecuzione del servizio richiesto dall'utente e per il funzionamento legittimo e sicuro della piattaforma RetroFight.
+
+## 5. Conservazione dei dati
+
+I dati degli account utente sono conservati usando l'infrastruttura Supabase situata nell'Unione Europea.
+
+Sono implementate misure tecniche e organizzative ragionevoli per proteggere i dati personali.
+
+## 6. Condivisione dei dati
+
+RetroFight non vende, affitta, scambia o comunica dati personali a terzi salvo quando richiesto dalla legge o necessario per il funzionamento del servizio.
+
+## 7. Periodo di conservazione
+
+I dati personali sono conservati solo per il tempo necessario a fornire il servizio o rispettare obblighi legali.
+
+Gli utenti possono richiedere la cancellazione dell'account in qualsiasi momento.
+
+## 8. Diritti dell'utente
+
+Nei limiti previsti dalla legge applicabile, gli utenti possono richiedere:
+
+- Accesso ai propri dati personali
+- Rettifica di dati inesatti
+- Cancellazione dei dati personali
+- Limitazione del trattamento
+- Portabilita' dei dati ove applicabile
+
+Le richieste possono essere inviate a:
+
+[stefanopascazi@gmail.com](mailto:stefanopascazi@gmail.com)
+
+## 9. Funzionalita' online future
+
+RetroFight potra' introdurre funzionalita' online opzionali come classifiche, storico match, condivisione replay, statistiche e funzionalita' community.
+
+Se tali funzionalita' richiederanno ulteriori trattamenti di dati personali, questa Privacy Policy sara' aggiornata prima che tali funzionalita' diventino disponibili.
+
+## 10. Modifiche a questa Policy
+
+RetroFight puo' aggiornare questa Privacy Policy periodicamente.
+
+Gli utenti sono invitati a consultare questa pagina periodicamente.`,
+    },
+    {
+      slug: "third-party-content",
+      title: "Avviso sui contenuti di terzi",
+      footerLabel: "Contenuti di terzi",
+      markdown: `# Avviso sui contenuti di terzi
+
+RetroFight puo' mostrare titoli di giochi, screenshot, artwork, miniature, metadati, identificatori, informazioni di compatibilita' e altri materiali descrittivi provenienti da fonti di terze parti.
+
+Tali materiali sono mostrati esclusivamente per:
+
+- Identificazione
+- Catalogazione
+- Verifica di compatibilita'
+- Presentazione nell'interfaccia utente
+- Finalita' informative
+
+Tutti i copyright, marchi, loghi, artwork, screenshot e relative proprieta' intellettuali restano di proprieta' dei rispettivi titolari.
+
+RetroFight non rivendica la proprieta' di alcuna proprieta' intellettuale di terzi.
+
+La visualizzazione di tali materiali non implica affiliazione, sponsorizzazione, approvazione, autorizzazione o consenso da parte di alcun avente diritto.
+
+Ove applicabile, metadati e materiali descrittivi possono provenire da database pubblici, repository mantenuti dalla community o provider di metadati di terze parti.
+
+Se ritieni che un materiale mostrato violi i tuoi diritti di proprieta' intellettuale, contattaci seguendo le procedure descritte nella Policy sul copyright.`,
+    },
+    {
+      slug: "copyright-policy",
+      title: "Policy sul copyright",
+      footerLabel: "Copyright",
+      markdown: `# Policy sul copyright
+
+Ultimo aggiornamento: 23/06/2026
+
+RetroFight rispetta i diritti di proprieta' intellettuale e si aspetta che tutti gli utenti facciano lo stesso.
+
+RetroFight non ospita, distribuisce, fornisce, vende o facilita l'accesso a giochi protetti da copyright, ROM, file BIOS, firmware, software commerciale, immagini disco o contenuti protetti simili.
+
+## Segnalazione di problemi di proprieta' intellettuale
+
+Se ritieni che contenuti, metadati, artwork, screenshot, miniature o altri materiali associati a RetroFight violino i tuoi diritti di proprieta' intellettuale, fornisci:
+
+- Identificazione dell'opera protetta
+- Identificazione del materiale ritenuto in violazione
+- I tuoi dati di contatto completi
+- Prova di proprieta' o autorizzazione
+- Una dichiarazione in buona fede che l'uso non e' autorizzato
+- Una dichiarazione che le informazioni fornite sono accurate
+
+Le segnalazioni possono essere inviate a:
+
+[stefanopascazi@gmail.com](mailto:stefanopascazi@gmail.com)
+
+RetroFight esaminera' tutte le richieste legittime e, ove appropriato, adottera' misure ragionevoli come modifica, rimozione, sostituzione o limitazione dell'accesso al materiale contestato.
+
+RetroFight si riserva il diritto di richiedere informazioni aggiuntive prima di agire.`,
+    },
+    {
+      slug: "legal-faq",
+      title: "FAQ legali",
+      footerLabel: "FAQ legali",
+      markdown: `# FAQ legali
+
+## RetroFight fornisce ROM?
+
+No.
+
+RetroFight non fornisce, ospita, distribuisce, vende o facilita l'accesso a ROM.
+
+## RetroFight fornisce file BIOS?
+
+No.
+
+RetroFight non fornisce, ospita, distribuisce, vende o facilita l'accesso a file BIOS.
+
+## RetroFight include giochi?
+
+No.
+
+RetroFight e' distribuito solo come software.
+
+## RetroFight supporta la pirateria?
+
+No.
+
+RetroFight non incoraggia, approva, supporta o promuove violazioni del copyright o pirateria software.
+
+## Perche' vengono mostrati i nomi dei giochi?
+
+I nomi dei giochi sono mostrati esclusivamente per identificazione, compatibilita', catalogazione e finalita' informative.
+
+## Perche' vengono mostrati screenshot o artwork?
+
+Screenshot, artwork, miniature e metadati possono essere mostrati solo per identificare contenuti compatibili e migliorare l'esperienza utente.
+
+Tutta la proprieta' intellettuale relativa resta dei rispettivi titolari.
+
+## RetroFight e' affiliato a publisher o produttori di console?
+
+No.
+
+RetroFight e' un progetto indipendente e non e' affiliato, approvato, sponsorizzato o autorizzato da publisher, sviluppatori, produttori di console o aventi diritto, salvo diversa indicazione esplicita.
+
+## Dove posso ottenere i giochi?
+
+RetroFight non fornisce indicazioni, link, servizi o istruzioni per acquisire contenuti protetti da copyright.
+
+Gli utenti sono gli unici responsabili di verificare di possedere i diritti legali necessari per usare qualsiasi contenuto con il software.`,
+    },
+  ],
+};
+
+export function getLegalDocumentSlugs() {
+  return legalDocumentSlugs;
+}
+
+export function getLegalDocuments(locale: LegalLocale) {
+  return legalDocumentsByLocale[locale];
+}
+
+export function getLegalDocument(locale: LegalLocale, slug: string) {
+  return (
+    legalDocumentsByLocale[locale].find((document) => document.slug === slug) ||
+    null
+  );
 }

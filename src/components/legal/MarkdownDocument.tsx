@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 type MarkdownDocumentProps = {
   markdown: string;
 };
@@ -41,7 +43,7 @@ export function MarkdownDocument({ markdown }: MarkdownDocumentProps) {
               {block.items.map((item) => (
                 <li key={item} className="flex gap-3">
                   <span className="mt-2 h-1.5 w-1.5 shrink-0 bg-brand-purple-500" />
-                  <span>{item}</span>
+                  <span>{renderInlineMarkdown(item)}</span>
                 </li>
               ))}
             </ul>
@@ -50,7 +52,7 @@ export function MarkdownDocument({ markdown }: MarkdownDocumentProps) {
 
         return (
           <p key={index} className="text-base leading-relaxed text-zinc-300">
-            {block.text}
+            {renderInlineMarkdown(block.text)}
           </p>
         );
       })}
@@ -101,4 +103,35 @@ function parseMarkdown(markdown: string): MarkdownBlock[] {
 
   flushList();
   return blocks;
+}
+
+function renderInlineMarkdown(text: string): ReactNode {
+  const parts: ReactNode[] = [];
+  const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/g;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = linkPattern.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+
+    const [, label, href] = match;
+    parts.push(
+      <a
+        key={`${href}-${match.index}`}
+        href={href}
+        className="font-semibold text-brand-purple-300 underline-offset-4 transition hover:text-white hover:underline"
+      >
+        {label}
+      </a>,
+    );
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return parts.length > 0 ? parts : text;
 }

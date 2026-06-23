@@ -3,7 +3,7 @@ import Image from "next/image";
 import { ArrowUp, Code, Download } from "lucide-react";
 import type { Locale, dictionaries } from "@/app/[lang]/dictionaries";
 import { DownloadConsentLink } from "@/components/legal/DownloadConsentLink";
-import { legalDocuments } from "@/lib/legal/documents";
+import { getLegalDocuments } from "@/lib/legal/documents";
 
 type FooterProps = {
   lang: Locale;
@@ -11,6 +11,8 @@ type FooterProps = {
 };
 
 export default function Footer({ lang, dictionary }: FooterProps) {
+  const legalDocuments = getLegalDocuments(lang);
+
   return (
     <footer className="border-t border-white/10 bg-black py-10">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 text-sm text-zinc-500 sm:px-6 lg:px-8">
@@ -37,6 +39,7 @@ export default function Footer({ lang, dictionary }: FooterProps) {
           <div className="flex flex-wrap gap-3">
             <DownloadConsentLink
               href={dictionary.installerUrl}
+              dictionary={dictionary.downloadConsent}
               className="inline-flex items-center gap-2 rounded-sm border border-white/10 px-3 py-2 font-semibold text-zinc-300 transition hover:border-brand-purple-500 hover:text-white"
             >
               <Download className="h-4 w-4" />
@@ -44,6 +47,7 @@ export default function Footer({ lang, dictionary }: FooterProps) {
             </DownloadConsentLink>
             <DownloadConsentLink
               href={dictionary.linuxAppImageUrl}
+              dictionary={dictionary.downloadConsent}
               className="inline-flex items-center gap-2 rounded-sm border border-white/10 px-3 py-2 font-semibold text-zinc-300 transition hover:border-brand-purple-500 hover:text-white"
             >
               <Download className="h-4 w-4" />

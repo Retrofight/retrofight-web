@@ -51,19 +51,21 @@ export default function AuthPanel({
       ? text.invalid
       : error === "signup_failed"
         ? text.signupFailed
-        : error === "auth_callback_failed"
-          ? text.callbackFailed
-          : error === "auth_link_expired"
-            ? text.linkExpired
-            : error === "auth_verifier_missing"
-              ? text.verifierMissing
-              : notice === "check_email"
-                ? text.checkEmail
-                : notice === "signed_out"
-                  ? text.signedOut
-                  : notice === "password_reset"
-                    ? text.passwordReset
-                    : null;
+        : error === "consent_required"
+          ? text.consentRequired
+          : error === "auth_callback_failed"
+            ? text.callbackFailed
+            : error === "auth_link_expired"
+              ? text.linkExpired
+              : error === "auth_verifier_missing"
+                ? text.verifierMissing
+                : notice === "check_email"
+                  ? text.checkEmail
+                  : notice === "signed_out"
+                    ? text.signedOut
+                    : notice === "password_reset"
+                      ? text.passwordReset
+                      : null;
 
   return (
     <main className="min-h-screen bg-dark-obsidian px-4 py-10 text-gray-100 sm:px-6">
@@ -160,6 +162,32 @@ export default function AuthPanel({
                 placeholder={text.displayNameHint}
                 required={false}
               />
+              <label className="flex gap-3 rounded-sm border border-white/10 bg-black/30 p-3 text-sm leading-6 text-zinc-300">
+                <input
+                  name="legalConsent"
+                  type="checkbox"
+                  value="accepted"
+                  required
+                  className="mt-1 h-4 w-4 shrink-0 accent-brand-purple-500"
+                />
+                <span>
+                  {text.acceptLegalPrefix}{" "}
+                  <Link
+                    href={`/${lang}/legal/terms-of-use`}
+                    className="font-semibold text-brand-purple-300 underline-offset-4 transition hover:text-white hover:underline"
+                  >
+                    {text.termsOfUse}
+                  </Link>{" "}
+                  {text.acceptLegalMiddle}{" "}
+                  <Link
+                    href={`/${lang}/legal/privacy-policy`}
+                    className="font-semibold text-brand-purple-300 underline-offset-4 transition hover:text-white hover:underline"
+                  >
+                    {text.privacyPolicy}
+                  </Link>
+                  {text.acceptLegalSuffix}
+                </span>
+              </label>
               <button className="mt-2 inline-flex h-12 items-center justify-center gap-2 rounded-sm border border-brand-purple-500 bg-white/[0.03] px-4 text-sm font-black uppercase text-white transition hover:bg-brand-purple-600">
                 <UserPlus className="h-4 w-4" />
                 {text.signUp}

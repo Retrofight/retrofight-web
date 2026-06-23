@@ -2,29 +2,38 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { downloadDisclaimerMarkdown } from "@/lib/legal/documents";
 import { MarkdownDocument } from "./MarkdownDocument";
 
 type DownloadConsentLinkProps = {
   href: string;
   className?: string;
   children: ReactNode;
+  dictionary: {
+    eyebrow: string;
+    fallbackFileName: string;
+    cancel: string;
+    agree: string;
+    markdown: string;
+  };
 };
 
 export function DownloadConsentLink({
   href,
   className,
-  children
+  children,
+  dictionary,
 }: DownloadConsentLinkProps) {
   const [open, setOpen] = useState(false);
   const agreeButtonRef = useRef<HTMLButtonElement>(null);
   const fileName = useMemo(() => {
     try {
-      return new URL(href).pathname.split("/").pop() || "RetroFight download";
+      return (
+        new URL(href).pathname.split("/").pop() || dictionary.fallbackFileName
+      );
     } catch {
-      return "RetroFight download";
+      return dictionary.fallbackFileName;
     }
-  }, [href]);
+  }, [dictionary.fallbackFileName, href]);
 
   useEffect(() => {
     if (!open) {
@@ -68,12 +77,12 @@ export function DownloadConsentLink({
           <div className="max-h-[88vh] w-full max-w-2xl overflow-y-auto rounded-sm border border-brand-purple-500/30 bg-dark-card p-6 shadow-2xl shadow-black/70 sm:p-8">
             <div className="mb-5 flex flex-col gap-2 border-b border-white/10 pb-5">
               <span className="font-pixel text-[9px] uppercase tracking-widest text-brand-purple-400">
-                Download
+                {dictionary.eyebrow}
               </span>
               <p className="font-mono text-xs text-zinc-500">{fileName}</p>
             </div>
             <div id="download-disclaimer-title">
-              <MarkdownDocument markdown={downloadDisclaimerMarkdown} />
+              <MarkdownDocument markdown={dictionary.markdown} />
             </div>
             <div className="mt-8 flex flex-col-reverse gap-3 border-t border-white/10 pt-5 sm:flex-row sm:justify-end">
               <button
@@ -81,7 +90,7 @@ export function DownloadConsentLink({
                 className="inline-flex min-h-12 items-center justify-center rounded-sm border border-white/10 px-4 py-3 font-display text-xs font-bold uppercase italic text-zinc-200 transition hover:border-brand-purple-500 hover:text-white"
                 onClick={() => setOpen(false)}
               >
-                Cancel
+                {dictionary.cancel}
               </button>
               <button
                 ref={agreeButtonRef}
@@ -89,7 +98,7 @@ export function DownloadConsentLink({
                 className="inline-flex min-h-12 items-center justify-center rounded-sm bg-brand-purple-500 px-4 py-3 font-display text-xs font-black uppercase italic text-[#071116] transition hover:bg-[#67e8f9]"
                 onClick={startDownload}
               >
-                I UNDERSTAND AND AGREE
+                {dictionary.agree}
               </button>
             </div>
           </div>

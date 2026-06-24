@@ -2,19 +2,17 @@
 
 import { useState } from "react";
 import { ShieldCheck } from "lucide-react";
-import type { Locale, dictionaries } from "@/app/[lang]/dictionaries";
-import { updatePrivacyConsent } from "@/app/[lang]/profile/actions";
+import type { Dictionary } from "@/app/dictionary";
+import { updatePrivacyConsent } from "@/app/profile/actions";
 
 type PrivacyConsentPanelProps = {
   accepted: boolean;
-  dictionary: (typeof dictionaries)[Locale]["profile"]["privacyConsent"];
-  lang: Locale;
+  dictionary: Dictionary["profile"]["privacyConsent"];
 };
 
 export function PrivacyConsentPanel({
   accepted,
   dictionary: text,
-  lang,
 }: PrivacyConsentPanelProps) {
   const [checked, setChecked] = useState(accepted);
 
@@ -31,7 +29,7 @@ export function PrivacyConsentPanel({
       </p>
 
       <form
-        action={updatePrivacyConsent.bind(null, lang)}
+        action={updatePrivacyConsent}
         className="mt-5 grid gap-4"
       >
         <label className="flex gap-3 rounded-sm border border-white/10 bg-black/30 p-3 text-sm leading-6 text-zinc-300">

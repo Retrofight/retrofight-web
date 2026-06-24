@@ -3,12 +3,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, LogIn, UserPlus } from "lucide-react";
-import type { Locale, dictionaries } from "@/app/[lang]/dictionaries";
-import { signIn, signUp } from "@/app/[lang]/login/actions";
+import type { Dictionary } from "@/app/dictionary";
+import { signIn, signUp } from "@/app/login/actions";
 
 type AuthPanelProps = {
-  lang: Locale;
-  dictionary: (typeof dictionaries)[Locale]["auth"];
+  dictionary: Dictionary["auth"];
   error?: string;
   notice?: string;
 };
@@ -44,7 +43,6 @@ function Field({
 }
 
 export default function AuthPanel({
-  lang,
   dictionary: text,
   error,
   notice,
@@ -82,7 +80,7 @@ export default function AuthPanel({
       <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
         <section className="pt-4 lg:pt-8">
           <Link
-            href={`/${lang}`}
+            href="/"
             className="inline-flex w-fit items-center gap-2 text-sm font-semibold text-brand-purple-400 transition hover:text-white"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -133,7 +131,7 @@ export default function AuthPanel({
           </div>
 
           {mode === "signin" ? (
-            <form action={signIn.bind(null, lang)}>
+            <form action={signIn}>
               <div className="mb-6 flex items-center gap-3">
                 <LogIn className="h-5 w-5 text-brand-purple-400" />
                 <h2 className="font-display text-xl font-black text-white">
@@ -158,7 +156,7 @@ export default function AuthPanel({
                   {text.signIn}
                 </button>
                 <Link
-                  href={`/${lang}/forgot-password`}
+                  href="/forgot-password"
                   className="text-sm font-semibold text-zinc-400 transition hover:text-white"
                 >
                   {text.forgotPassword}
@@ -166,7 +164,7 @@ export default function AuthPanel({
               </div>
             </form>
           ) : (
-            <form action={signUp.bind(null, lang)}>
+            <form action={signUp}>
               <div className="mb-6 flex items-center gap-3">
                 <UserPlus className="h-5 w-5 text-brand-purple-400" />
                 <h2 className="font-display text-xl font-black text-white">
@@ -205,14 +203,14 @@ export default function AuthPanel({
                   <span>
                     {text.acceptLegalPrefix}{" "}
                     <Link
-                      href={`/${lang}/legal/terms-of-use`}
+                      href="/legal/terms-of-use"
                       className="font-semibold text-brand-purple-300 underline-offset-4 transition hover:text-white hover:underline"
                     >
                       {text.termsOfUse}
                     </Link>{" "}
                     {text.acceptLegalMiddle}{" "}
                     <Link
-                      href={`/${lang}/legal/privacy-policy`}
+                      href="/legal/privacy-policy"
                       className="font-semibold text-brand-purple-300 underline-offset-4 transition hover:text-white hover:underline"
                     >
                       {text.privacyPolicy}

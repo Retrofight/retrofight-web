@@ -1,14 +1,14 @@
 import Link from "next/link";
-import { redirect, notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { KeyRound, LogOut, ShieldCheck, UserRound } from "lucide-react";
 import { DeleteAccountPanel } from "@/components/profile/DeleteAccountPanel";
 import { PrivacyConsentPanel } from "@/components/profile/PrivacyConsentPanel";
 import { hasActivePrivacyConsent } from "@/lib/privacy/consent";
 import { createClient } from "@/lib/supabase/server";
-import { getDictionary, hasLocale, type dictionaries } from "../dictionaries";
+import { dictionary, type Dictionary } from "../dictionary";
 import { signOut, updatePassword } from "./actions";
 
-type ProfileDictionary = (typeof dictionaries)["en"]["profile"];
+type ProfileDictionary = Dictionary["profile"];
 type PasswordStatus = keyof ProfileDictionary["passwordMessages"];
 type AccountStatus = keyof ProfileDictionary["accountMessages"];
 type PrivacyStatus = keyof ProfileDictionary["privacyMessages"];
@@ -41,30 +41,23 @@ function isPrivacyStatus(value: string | undefined): value is PrivacyStatus {
 }
 
 export default async function ProfilePage({
-  params,
   searchParams,
 }: {
-  params: Promise<{ lang: string }>;
   searchParams: Promise<{ account?: string; password?: string; privacy?: string }>;
 }) {
-  const { lang } = await params;
   const { account, password, privacy } = await searchParams;
-
-  if (!hasLocale(lang)) {
-    notFound();
-  }
 
   const supabase = await createClient();
   const { data: claimsData, error: claimsError } =
     await supabase.auth.getClaims();
 
   if (claimsError || !claimsData?.claims) {
-    redirect(`/${lang}/login`);
+    redirect("/login");
   }
 
   const { data } = await supabase.auth.getUser();
   const user = data.user;
-  const text = getDictionary(lang).profile;
+  const text = dictionary.profile;
   const displayName =
     typeof user?.user_metadata?.display_name === "string"
       ? user.user_metadata.display_name
@@ -85,7 +78,7 @@ export default async function ProfilePage({
     <main className="min-h-screen bg-dark-obsidian px-4 py-10 text-gray-100 sm:px-6">
       <section className="mx-auto max-w-4xl">
         <Link
-          href={`/${lang}`}
+          href="/"
           className="inline-flex items-center gap-2 text-sm font-semibold text-brand-purple-400 transition hover:text-white"
         >
           <ShieldCheck className="h-4 w-4" />
@@ -128,7 +121,7 @@ export default async function ProfilePage({
               </div>
             </dl>
 
-            <form action={signOut.bind(null, lang)} className="mt-8">
+            <form action={signOut} className="mt-8">
               <button className="inline-flex h-11 items-center justify-center gap-2 rounded-sm border border-white/10 px-4 text-sm font-black uppercase text-white transition hover:border-brand-purple-500">
                 <LogOut className="h-4 w-4" />
                 {text.signOut}
@@ -140,7 +133,6 @@ export default async function ProfilePage({
             <PrivacyConsentPanel
               accepted={privacyConsentAccepted}
               dictionary={text.privacyConsent}
-              lang={lang}
             />
 
             {privacyMessage ? (
@@ -167,7 +159,7 @@ export default async function ProfilePage({
               ) : null}
 
               <form
-                action={updatePassword.bind(null, lang)}
+                action={updatePassword}
                 className="mt-6 grid gap-4"
               >
                 <label className="grid gap-2 text-sm font-semibold text-zinc-200">
@@ -216,7 +208,6 @@ export default async function ProfilePage({
             ) : null}
 
             <DeleteAccountPanel
-              lang={lang}
               email={email}
               dictionary={text.deleteAccount}
             />

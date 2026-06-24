@@ -1,5 +1,6 @@
-import { redirect } from "next/navigation";
+import LandingPage from "@/components/landing/LandingPage";
+import { dictionary } from "./dictionary";
 
 export default function Home() {
-  redirect("/en");
+  return <LandingPage dictionary={dictionary} />;
 }

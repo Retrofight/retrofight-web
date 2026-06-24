@@ -1,14 +1,13 @@
 import Link from "next/link";
-import type { Locale, dictionaries } from "@/app/[lang]/dictionaries";
+import type { Dictionary } from "@/app/dictionary";
 import { getLegalDocuments } from "@/lib/legal/documents";
 
 type FooterProps = {
-  lang: Locale;
-  dictionary: (typeof dictionaries)[Locale];
+  dictionary: Dictionary;
 };
 
-export default function Footer({ lang, dictionary }: FooterProps) {
-  const legalDocuments = getLegalDocuments(lang);
+export default function Footer({ dictionary }: FooterProps) {
+  const legalDocuments = getLegalDocuments();
 
   return (
     <footer className="border-t border-white/10 bg-black py-8">
@@ -20,7 +19,7 @@ export default function Footer({ lang, dictionary }: FooterProps) {
           {legalDocuments.map((document) => (
             <Link
               key={document.slug}
-              href={`/${lang}/legal/${document.slug}`}
+              href={`/legal/${document.slug}`}
               className="font-semibold text-zinc-300 transition hover:text-white"
             >
               {document.footerLabel}

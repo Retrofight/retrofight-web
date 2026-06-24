@@ -4,13 +4,12 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getPrivacyConsentMetadata } from "@/lib/privacy/consent";
-import type { Locale } from "../dictionaries";
 
 function cleanText(value: FormDataEntryValue | null) {
   return typeof value === "string" ? value.trim() : "";
 }
 
-async function getAuthRedirectUrl(lang: Locale) {
+async function getAuthRedirectUrl() {
   const headersList = await headers();
   const origin = headersList.get("origin");
   const siteUrl =
@@ -22,10 +21,10 @@ async function getAuthRedirectUrl(lang: Locale) {
     origin ||
     "http://localhost:3001";
 
-  return `${siteUrl}/auth/callback?next=/${lang}/profile`;
+  return `${siteUrl}/auth/callback?next=/profile`;
 }
 
-async function getPasswordRecoveryRedirectUrl(lang: Locale) {
+async function getPasswordRecoveryRedirectUrl() {
   const headersList = await headers();
   const origin = headersList.get("origin");
   const siteUrl =
@@ -37,22 +36,21 @@ async function getPasswordRecoveryRedirectUrl(lang: Locale) {
     origin ||
     "http://localhost:3001";
 
-  return `${siteUrl}/auth/callback?next=/${lang}/reset-password`;
+  return `${siteUrl}/auth/callback?next=/reset-password`;
 }
 
 function redirectToLogin(
-  lang: Locale,
   key: "invalid" | "signup_failed" | "consent_required",
 ) {
-  redirect(`/${lang}/login?error=${key}`);
+  redirect(`/login?error=${key}`);
 }
 
-export async function signIn(lang: Locale, formData: FormData) {
+export async function signIn(formData: FormData) {
   const email = cleanText(formData.get("email"));
   const password = cleanText(formData.get("password"));
 
   if (!email || !password) {
-    redirectToLogin(lang, "invalid");
+    redirectToLogin("invalid");
   }
 
   const supabase = await createClient();
@@ -62,24 +60,24 @@ export async function signIn(lang: Locale, formData: FormData) {
   });
 
   if (error) {
-    redirectToLogin(lang, "invalid");
+    redirectToLogin("invalid");
   }
 
-  redirect(`/${lang}/profile`);
+  redirect("/profile");
 }
 
-export async function signUp(lang: Locale, formData: FormData) {
+export async function signUp(formData: FormData) {
   const email = cleanText(formData.get("email"));
   const password = cleanText(formData.get("password"));
   const displayName = cleanText(formData.get("displayName"));
   const legalConsent = formData.get("legalConsent") === "accepted";
 
   if (!email || !password) {
-    redirectToLogin(lang, "invalid");
+    redirectToLogin("invalid");
   }
 
   if (!legalConsent) {
-    redirectToLogin(lang, "consent_required");
+    redirectToLogin("consent_required");
   }
 
   const supabase = await createClient();
@@ -87,40 +85,40 @@ export async function signUp(lang: Locale, formData: FormData) {
     email,
     password,
     options: {
-      emailRedirectTo: await getAuthRedirectUrl(lang),
+      emailRedirectTo: await getAuthRedirectUrl(),
       data: {
         display_name: displayName || email.split("@")[0],
-        ...getPrivacyConsentMetadata(lang),
+        ...getPrivacyConsentMetadata(),
       },
     },
   });
 
   if (error) {
-    redirectToLogin(lang, "signup_failed");
+    redirectToLogin("signup_failed");
   }
 
   if (data.session) {
-    redirect(`/${lang}/profile`);
+    redirect("/profile");
   }
 
-  redirect(`/${lang}/login?notice=check_email`);
+  redirect("/login?notice=check_email");
 }
 
-export async function requestPasswordReset(lang: Locale, formData: FormData) {
+export async function requestPasswordReset(formData: FormData) {
   const email = cleanText(formData.get("email"));
 
   if (!email) {
-    redirect(`/${lang}/forgot-password?error=missing_email`);
+    redirect("/forgot-password?error=missing_email");
   }
 
   const supabase = await createClient();
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: await getPasswordRecoveryRedirectUrl(lang),
+    redirectTo: await getPasswordRecoveryRedirectUrl(),
   });
 
   if (error) {
-    redirect(`/${lang}/forgot-password?error=request_failed`);
+    redirect("/forgot-password?error=request_failed");
   }
 
-  redirect(`/${lang}/forgot-password?notice=reset_sent`);
+  redirect("/forgot-password?notice=reset_sent");
 }

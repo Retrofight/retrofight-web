@@ -8,33 +8,32 @@ import {
 } from "@/lib/privacy/consent";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
-import type { Locale } from "../dictionaries";
 
 function cleanText(value: FormDataEntryValue | null) {
   return typeof value === "string" ? value.trim() : "";
 }
 
-export async function signOut(lang: Locale) {
+export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
-  redirect(`/${lang}/login?notice=signed_out`);
+  redirect("/login?notice=signed_out");
 }
 
-export async function updatePassword(lang: Locale, formData: FormData) {
+export async function updatePassword(formData: FormData) {
   const currentPassword = cleanText(formData.get("currentPassword"));
   const password = cleanText(formData.get("password"));
   const confirmPassword = cleanText(formData.get("confirmPassword"));
 
   if (!currentPassword || !password || !confirmPassword) {
-    redirect(`/${lang}/profile?password=missing`);
+    redirect("/profile?password=missing");
   }
 
   if (password !== confirmPassword) {
-    redirect(`/${lang}/profile?password=mismatch`);
+    redirect("/profile?password=mismatch");
   }
 
   if (password.length < 8) {
-    redirect(`/${lang}/profile?password=weak`);
+    redirect("/profile?password=weak");
   }
 
   const supabase = await createClient();
@@ -42,7 +41,7 @@ export async function updatePassword(lang: Locale, formData: FormData) {
   const email = userData.user?.email;
 
   if (userError || !email) {
-    redirect(`/${lang}/login`);
+    redirect("/login");
   }
 
   const { error: signInError } = await supabase.auth.signInWithPassword({
@@ -51,7 +50,7 @@ export async function updatePassword(lang: Locale, formData: FormData) {
   });
 
   if (signInError) {
-    redirect(`/${lang}/profile?password=current_invalid`);
+    redirect("/profile?password=current_invalid");
   }
 
   const { error } = await supabase.auth.updateUser({
@@ -59,20 +58,20 @@ export async function updatePassword(lang: Locale, formData: FormData) {
   });
 
   if (error) {
-    redirect(`/${lang}/profile?password=policy`);
+    redirect("/profile?password=policy");
   }
 
-  revalidatePath(`/${lang}/profile`);
-  redirect(`/${lang}/profile?password=updated`);
+  revalidatePath("/profile");
+  redirect("/profile?password=updated");
 }
 
-export async function updatePrivacyConsent(lang: Locale, formData: FormData) {
+export async function updatePrivacyConsent(formData: FormData) {
   const accepted = formData.get("privacyConsent") === "accepted";
   const supabase = await createClient();
   const { data: userData, error: userError } = await supabase.auth.getUser();
 
   if (userError || !userData.user) {
-    redirect(`/${lang}/login`);
+    redirect("/login");
   }
 
   const currentMetadata =
@@ -81,8 +80,8 @@ export async function updatePrivacyConsent(lang: Locale, formData: FormData) {
       ? userData.user.user_metadata
       : {};
   const consentMetadata = accepted
-    ? getPrivacyConsentMetadata(lang)
-    : getPrivacyConsentRevocationMetadata(lang);
+    ? getPrivacyConsentMetadata()
+    : getPrivacyConsentRevocationMetadata();
 
   const { error } = await supabase.auth.updateUser({
     data: {
@@ -92,16 +91,14 @@ export async function updatePrivacyConsent(lang: Locale, formData: FormData) {
   });
 
   if (error) {
-    redirect(`/${lang}/profile?privacy=update_failed`);
+    redirect("/profile?privacy=update_failed");
   }
 
-  revalidatePath(`/${lang}/profile`);
-  redirect(
-    `/${lang}/profile?privacy=${accepted ? "accepted" : "revoked"}`,
-  );
+  revalidatePath("/profile");
+  redirect(`/profile?privacy=${accepted ? "accepted" : "revoked"}`);
 }
 
-export async function deleteAccount(lang: Locale, formData: FormData) {
+export async function deleteAccount(formData: FormData) {
   const confirmEmail = cleanText(formData.get("confirmEmail")).toLowerCase();
   const supabase = await createClient();
   const { data: userData, error: userError } = await supabase.auth.getUser();
@@ -109,26 +106,26 @@ export async function deleteAccount(lang: Locale, formData: FormData) {
   const email = user?.email?.toLowerCase();
 
   if (userError || !user || !email) {
-    redirect(`/${lang}/login`);
+    redirect("/login");
   }
 
   if (confirmEmail !== email) {
-    redirect(`/${lang}/profile?account=email_mismatch`);
+    redirect("/profile?account=email_mismatch");
   }
 
   let admin;
   try {
     admin = createAdminClient();
   } catch {
-    redirect(`/${lang}/profile?account=admin_unavailable`);
+    redirect("/profile?account=admin_unavailable");
   }
 
   const { error } = await admin.auth.admin.deleteUser(user.id);
 
   if (error) {
-    redirect(`/${lang}/profile?account=delete_failed`);
+    redirect("/profile?account=delete_failed");
   }
 
   await supabase.auth.signOut();
-  redirect(`/${lang}/login?notice=account_deleted`);
+  redirect("/login?notice=account_deleted");
 }

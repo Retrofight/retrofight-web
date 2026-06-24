@@ -13,16 +13,15 @@ import {
   ShieldCheck,
   Terminal,
 } from "lucide-react";
-import type { Locale, dictionaries } from "@/app/[lang]/dictionaries";
+import type { Dictionary } from "@/app/dictionary";
 
 const heroImg = "/lobby-games-selection.png";
 
 type HeroProps = {
-  lang: Locale;
-  dictionary: (typeof dictionaries)[Locale];
+  dictionary: Dictionary;
 };
 
-export default function Hero({ lang, dictionary }: HeroProps) {
+export default function Hero({ dictionary }: HeroProps) {
   const home = dictionary.home;
   const downloadLinks = [
     {
@@ -112,7 +111,7 @@ export default function Hero({ lang, dictionary }: HeroProps) {
                 </DownloadConsentLink>
               ))}
               <Link
-                href={`/${lang}/wiki`}
+                href="/wiki"
                 className="inline-flex min-h-16 items-center justify-center gap-2 rounded-sm border border-white/10 px-4 py-3 text-sm font-semibold text-zinc-200 transition hover:border-brand-purple-500 hover:text-white sm:col-span-2"
               >
                 <Gamepad2 className="h-5 w-5" />

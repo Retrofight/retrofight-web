@@ -2,17 +2,15 @@
 
 import { useMemo, useState } from "react";
 import { AlertTriangle, Trash2, X } from "lucide-react";
-import type { Locale, dictionaries } from "@/app/[lang]/dictionaries";
-import { deleteAccount } from "@/app/[lang]/profile/actions";
+import type { Dictionary } from "@/app/dictionary";
+import { deleteAccount } from "@/app/profile/actions";
 
 type DeleteAccountPanelProps = {
-  lang: Locale;
   email: string;
-  dictionary: (typeof dictionaries)[Locale]["profile"]["deleteAccount"];
+  dictionary: Dictionary["profile"]["deleteAccount"];
 };
 
 export function DeleteAccountPanel({
-  lang,
   email,
   dictionary: text,
 }: DeleteAccountPanelProps) {
@@ -78,7 +76,7 @@ export function DeleteAccountPanel({
             </p>
 
             <form
-              action={deleteAccount.bind(null, lang)}
+              action={deleteAccount}
               className="mt-6 grid gap-4"
             >
               <label className="grid gap-2 text-sm font-semibold text-zinc-200">

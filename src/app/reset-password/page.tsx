@@ -1,56 +1,46 @@
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { ArrowLeft, KeyRound } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { getDictionary, hasLocale } from "../dictionaries";
-import { requestPasswordReset } from "../login/actions";
+import { dictionary } from "../dictionary";
+import { resetPassword } from "./actions";
 
-type ForgotPasswordStatus = "missing_email" | "request_failed";
-type ForgotPasswordNotice = "reset_sent";
+type ResetPasswordStatus = "missing" | "mismatch" | "weak" | "policy";
 
-function isError(value: string | undefined): value is ForgotPasswordStatus {
-  return value === "missing_email" || value === "request_failed";
+function isResetPasswordStatus(
+  value: string | undefined,
+): value is ResetPasswordStatus {
+  return (
+    value === "missing" ||
+    value === "mismatch" ||
+    value === "weak" ||
+    value === "policy"
+  );
 }
 
-function isNotice(value: string | undefined): value is ForgotPasswordNotice {
-  return value === "reset_sent";
-}
-
-export default async function ForgotPasswordPage({
-  params,
+export default async function ResetPasswordPage({
   searchParams,
 }: {
-  params: Promise<{ lang: string }>;
-  searchParams: Promise<{ error?: string; notice?: string }>;
+  searchParams: Promise<{ error?: string }>;
 }) {
-  const { lang } = await params;
-  const { error, notice } = await searchParams;
-
-  if (!hasLocale(lang)) {
-    notFound();
-  }
+  const { error } = await searchParams;
 
   const supabase = await createClient();
-  const { data } = await supabase.auth.getClaims();
+  const { data: claimsData, error: claimsError } =
+    await supabase.auth.getClaims();
 
-  if (data?.claims) {
-    redirect(`/${lang}/profile`);
+  if (claimsError || !claimsData?.claims) {
+    redirect("/login?error=auth_link_expired");
   }
 
-  const text = getDictionary(lang).forgotPassword;
-  const message = isError(error)
-    ? error === "missing_email"
-      ? text.missingEmail
-      : text.requestFailed
-    : isNotice(notice)
-      ? text.resetSent
-      : null;
+  const text = dictionary.resetPassword;
+  const message = isResetPasswordStatus(error) ? text[error] : null;
 
   return (
     <main className="min-h-screen bg-dark-obsidian px-4 py-10 text-gray-100 sm:px-6">
       <section className="mx-auto max-w-xl">
         <Link
-          href={`/${lang}/login`}
+          href="/login"
           className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wide text-brand-purple-400 transition hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -58,7 +48,7 @@ export default async function ForgotPasswordPage({
         </Link>
 
         <form
-          action={requestPasswordReset.bind(null, lang)}
+          action={resetPassword}
           className="mt-10 rounded-sm border border-white/10 bg-dark-card p-6 shadow-2xl shadow-black/30"
         >
           <div className="flex items-center gap-3">
@@ -82,11 +72,23 @@ export default async function ForgotPasswordPage({
 
           <div className="mt-6 grid gap-4">
             <label className="grid gap-2 text-sm font-semibold text-zinc-200">
-              <span>{text.email}</span>
+              <span>{text.password}</span>
               <input
-                name="email"
-                type="email"
-                autoComplete="email"
+                name="password"
+                type="password"
+                autoComplete="new-password"
+                minLength={8}
+                required
+                className="h-12 rounded-sm border border-white/10 bg-black/45 px-3 text-sm text-white outline-none transition focus:border-brand-purple-500"
+              />
+            </label>
+            <label className="grid gap-2 text-sm font-semibold text-zinc-200">
+              <span>{text.confirmPassword}</span>
+              <input
+                name="confirmPassword"
+                type="password"
+                autoComplete="new-password"
+                minLength={8}
                 required
                 className="h-12 rounded-sm border border-white/10 bg-black/45 px-3 text-sm text-white outline-none transition focus:border-brand-purple-500"
               />

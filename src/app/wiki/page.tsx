@@ -1,28 +1,16 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
-import { getDictionary, hasLocale } from "../dictionaries";
-import { notFound } from "next/navigation";
+import { dictionary } from "../dictionary";
 
-export default async function WikiPage({
-  params,
-}: {
-  params: Promise<{ lang: string }>;
-}) {
-  const { lang } = await params;
-
-  if (!hasLocale(lang)) {
-    notFound();
-  }
-
-  const dictionary = getDictionary(lang);
+export default function WikiPage() {
   const wiki = dictionary.wiki;
 
   return (
     <main className="min-h-screen bg-dark-obsidian text-zinc-100">
       <div className="mx-auto flex max-w-4xl flex-col gap-10 px-5 py-10 sm:px-8 lg:py-14">
         <Link
-          href={`/${lang}`}
+          href="/"
           className="inline-flex w-fit items-center gap-2 text-sm font-semibold text-brand-purple-400 transition hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" />

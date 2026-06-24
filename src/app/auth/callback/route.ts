@@ -4,14 +4,10 @@ import { createClient } from "@/lib/supabase/server";
 
 function getSafeNextPath(value: string | null) {
   if (!value || !value.startsWith("/") || value.startsWith("//")) {
-    return "/en/profile";
+    return "/profile";
   }
 
-  return value;
-}
-
-function getLocaleFromPath(path: string) {
-  return path.startsWith("/it/") || path === "/it" ? "it" : "en";
+  return value.replace(/^\/(?:en|it)(?=\/|$)/, "") || "/";
 }
 
 function getLoginRedirectUrl(
@@ -19,8 +15,7 @@ function getLoginRedirectUrl(
   next: string,
   error: "auth_callback_failed" | "auth_link_expired" | "auth_verifier_missing",
 ) {
-  const locale = getLocaleFromPath(next);
-  return new URL(`/${locale}/login?error=${error}`, requestUrl.origin);
+  return new URL(`/login?error=${error}`, requestUrl.origin);
 }
 
 const emailOtpTypes = new Set<string>([

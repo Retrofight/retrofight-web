@@ -3,15 +3,15 @@ import { downloadDisclaimerMarkdown } from "@/lib/legal/documents";
 const shared = {
   githubOrg: "https://github.com/Retrofight",
   releaseUrl:
-    "https://github.com/Retrofight/retrofight-releases/releases/tag/v0.6.5-beta.0",
+    "https://github.com/Retrofight/retrofight-releases/releases/tag/v0.6.8-beta.0",
   installerUrl:
-    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.6.5-beta.0/RetroFight-Windows-Setup-0.6.5-beta.0-x64.exe",
+    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.6.8-beta.0/RetroFight-Windows-Setup-0.6.8-beta.0-x64.exe",
   portableUrl:
-    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.6.5-beta.0/RetroFight-Windows-0.6.5-beta.0-x64.zip",
+    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.6.8-beta.0/RetroFight-Windows-0.6.8-beta.0-x64.zip",
   linuxAppImageUrl:
-    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.6.5-beta.0/RetroFight-Linux-0.6.5-beta.0-x86_64.AppImage",
+    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.6.8-beta.0/RetroFight-Linux-0.6.8-beta.0-x86_64.AppImage",
   linuxDebUrl:
-    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.6.5-beta.0/RetroFight-Linux-0.6.5-beta.0-amd64.deb",
+    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.6.8-beta.0/RetroFight-Linux-0.6.8-beta.0-amd64.deb",
 };
 
 export const dictionary = {

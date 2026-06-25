@@ -160,6 +160,25 @@ export const dictionary = {
         cancel: "Cancel",
         confirm: "Delete account",
       },
+      diagnostics: {
+        title: "Network diagnostics",
+        description:
+          "The RetroFight desktop client can optionally send anonymous technical data to help diagnose connection problems. This is disabled by default.",
+        dataCollected: "When enabled, the client reports after each match attempt:",
+        items: [
+          "UDP candidate type (LAN, STUN, public)",
+          "STUN discovery outcome",
+          "Punch result and reason",
+          "Probe round-trip latency",
+          "Client and runtime version",
+          "Game driver name",
+          "Runtime crash exit code when applicable",
+        ],
+        notCollected:
+          "No ROM files, game inputs, display names, or personally identifiable data are collected.",
+        howToManage:
+          "Diagnostic telemetry can be enabled or disabled from the Quick Actions menu inside the desktop client.",
+      },
     },
     home: {
       badge: "Beta test version",

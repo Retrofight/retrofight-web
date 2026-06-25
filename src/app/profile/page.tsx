@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { KeyRound, LogOut, ShieldCheck, UserRound } from "lucide-react";
+import { Activity, KeyRound, LogOut, ShieldCheck, UserRound } from "lucide-react";
 import { DeleteAccountPanel } from "@/components/profile/DeleteAccountPanel";
 import { PrivacyConsentPanel } from "@/components/profile/PrivacyConsentPanel";
 import { hasActivePrivacyConsent } from "@/lib/privacy/consent";
@@ -206,6 +206,35 @@ export default async function ProfilePage({
                 {accountMessage}
               </p>
             ) : null}
+
+            <section className="rounded-sm border border-white/10 bg-dark-card p-6 shadow-2xl shadow-black/30">
+              <div className="flex items-center gap-3">
+                <Activity className="h-5 w-5 text-brand-purple-400" />
+                <h2 className="font-display text-xl font-black text-white">
+                  {text.diagnostics.title}
+                </h2>
+              </div>
+              <p className="mt-3 text-sm leading-6 text-zinc-400">
+                {text.diagnostics.description}
+              </p>
+              <p className="mt-4 text-xs font-semibold uppercase text-zinc-500">
+                {text.diagnostics.dataCollected}
+              </p>
+              <ul className="mt-2 space-y-1 text-sm text-zinc-300">
+                {text.diagnostics.items.map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-purple-400" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-4 text-sm text-zinc-500">
+                {text.diagnostics.notCollected}
+              </p>
+              <p className="mt-2 text-sm text-zinc-500">
+                {text.diagnostics.howToManage}
+              </p>
+            </section>
 
             <DeleteAccountPanel
               email={email}

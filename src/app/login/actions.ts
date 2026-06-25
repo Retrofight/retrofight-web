@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getPrivacyConsentMetadata } from "@/lib/privacy/consent";
 
 function cleanText(value: FormDataEntryValue | null) {
@@ -40,7 +41,12 @@ async function getPasswordRecoveryRedirectUrl() {
 }
 
 function redirectToLogin(
-  key: "invalid" | "signup_failed" | "consent_required",
+  key:
+    | "invalid"
+    | "signup_failed"
+    | "consent_required"
+    | "email_taken"
+    | "display_name_taken",
 ) {
   redirect(`/login?error=${key}`);
 }
@@ -72,7 +78,7 @@ export async function signUp(formData: FormData) {
   const displayName = cleanText(formData.get("displayName"));
   const legalConsent = formData.get("legalConsent") === "accepted";
 
-  if (!email || !password) {
+  if (!email || !password || !displayName) {
     redirectToLogin("invalid");
   }
 
@@ -81,13 +87,23 @@ export async function signUp(formData: FormData) {
   }
 
   const supabase = await createClient();
+
+  // Check display name uniqueness before creating the auth user
+  const { data: nameTaken, error: nameCheckError } = await supabase.rpc(
+    "is_display_name_taken",
+    { p_name: displayName },
+  );
+  if (nameCheckError || nameTaken) {
+    redirectToLogin("display_name_taken");
+  }
+
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       emailRedirectTo: await getAuthRedirectUrl(),
       data: {
-        display_name: displayName || email.split("@")[0],
+        display_name: displayName,
         ...getPrivacyConsentMetadata(),
       },
     },
@@ -95,6 +111,28 @@ export async function signUp(formData: FormData) {
 
   if (error) {
     redirectToLogin("signup_failed");
+  }
+
+  // Supabase returns a user with empty identities when email is already registered
+  // (email confirmation is enabled, so no error is surfaced to prevent enumeration)
+  if (data.user?.identities?.length === 0) {
+    redirectToLogin("email_taken");
+  }
+
+  if (!data.user) {
+    redirectToLogin("signup_failed");
+  }
+
+  // Reserve the display name in the profiles table immediately after auth user creation
+  const adminClient = createAdminClient();
+  const { error: profileError } = await adminClient
+    .from("profiles")
+    .insert({ id: data.user!.id, display_name: displayName });
+
+  if (profileError) {
+    // Unique constraint violation: another user registered the same name in the race window
+    await adminClient.auth.admin.deleteUser(data.user!.id);
+    redirectToLogin("display_name_taken");
   }
 
   if (data.session) {

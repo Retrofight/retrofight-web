@@ -52,13 +52,17 @@ export const dictionary = {
       email: "Email",
       password: "Password",
       displayName: "Player name",
-      displayNameHint: "Optional",
+      displayNameHint: "Choose a unique player name",
       back: "Back to home",
       invalid: "Check your email and password, then try again.",
       consentRequired:
         "Read and accept the Terms of Use and Privacy Policy to register.",
       signupFailed:
         "Registration did not complete. Try another email or password.",
+      emailTaken:
+        "This email address is already registered. Sign in or use a different email.",
+      displayNameTaken:
+        "This player name is already taken. Choose a different one.",
       callbackFailed:
         "The confirmation link is incomplete. Request a new registration email.",
       linkExpired:

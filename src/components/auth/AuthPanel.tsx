@@ -48,7 +48,10 @@ export default function AuthPanel({
   notice,
 }: AuthPanelProps) {
   const initialMode =
-    error === "signup_failed" || error === "consent_required"
+    error === "signup_failed" ||
+    error === "consent_required" ||
+    error === "email_taken" ||
+    error === "display_name_taken"
       ? "signup"
       : "signin";
   const [mode, setMode] = useState<"signin" | "signup">(initialMode);
@@ -57,23 +60,27 @@ export default function AuthPanel({
       ? text.invalid
       : error === "signup_failed"
         ? text.signupFailed
-        : error === "consent_required"
-          ? text.consentRequired
-          : error === "auth_callback_failed"
-            ? text.callbackFailed
-            : error === "auth_link_expired"
-              ? text.linkExpired
-              : error === "auth_verifier_missing"
-                ? text.verifierMissing
-                : notice === "check_email"
-                  ? text.checkEmail
-                  : notice === "signed_out"
-                  ? text.signedOut
-                  : notice === "password_reset"
-                    ? text.passwordReset
-                    : notice === "account_deleted"
-                      ? text.accountDeleted
-                      : null;
+        : error === "email_taken"
+          ? text.emailTaken
+          : error === "display_name_taken"
+            ? text.displayNameTaken
+            : error === "consent_required"
+              ? text.consentRequired
+              : error === "auth_callback_failed"
+                ? text.callbackFailed
+                : error === "auth_link_expired"
+                  ? text.linkExpired
+                  : error === "auth_verifier_missing"
+                    ? text.verifierMissing
+                    : notice === "check_email"
+                      ? text.checkEmail
+                      : notice === "signed_out"
+                        ? text.signedOut
+                        : notice === "password_reset"
+                          ? text.passwordReset
+                          : notice === "account_deleted"
+                            ? text.accountDeleted
+                            : null;
 
   return (
     <main className="min-h-screen bg-dark-obsidian px-4 py-10 text-gray-100 sm:px-6">
@@ -190,7 +197,6 @@ export default function AuthPanel({
                   type="text"
                   autoComplete="nickname"
                   placeholder={text.displayNameHint}
-                  required={false}
                 />
                 <label className="flex gap-3 rounded-sm border border-white/10 bg-black/30 p-3 text-sm leading-6 text-zinc-300">
                   <input

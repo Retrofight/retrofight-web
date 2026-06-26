@@ -222,7 +222,7 @@ export const dictionary = {
       },
       results: {
         win: "Win",
-        loss: "Loss",
+        loss: "Defeat",
         forfeit: "Forfeit",
         disputed: "Disputed",
         unknown: "—",

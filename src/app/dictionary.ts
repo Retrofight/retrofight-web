@@ -223,6 +223,7 @@ export const dictionary = {
       results: {
         win: "Win",
         loss: "Defeat",
+        played: "Played",
         forfeit: "Forfeit",
         disputed: "Disputed",
         unknown: "—",

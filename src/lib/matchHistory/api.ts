@@ -14,7 +14,7 @@ export interface MatchHistoryEntry {
   p2_score: number | null;
   p1_char: number | null;
   p2_char: number | null;
-  status: "confirmed" | "disputed" | "forfeit";
+  status: "played" | "confirmed" | "disputed" | "forfeit";
   turbo_detected: boolean;
   runtime_version: string | null;
   protocol_version: string | null;
@@ -56,7 +56,7 @@ export async function getPublicMatchHistory(userId: string, limit = 20): Promise
     .from("match_history")
     .select("*")
     .or(`p1_id.eq.${userId},p2_id.eq.${userId}`)
-    .in("status", ["confirmed", "forfeit"])
+    .in("status", ["played", "confirmed", "forfeit"])
     .order("played_at", { ascending: false })
     .limit(limit);
 

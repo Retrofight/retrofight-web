@@ -3,6 +3,7 @@ import type { Dictionary } from "@/app/dictionary";
 
 type Columns = Dictionary["players"]["columns"];
 type Results = Dictionary["players"]["results"];
+
 type MatchTypes = Dictionary["players"]["matchTypes"];
 
 interface MatchHistoryListProps {
@@ -19,6 +20,9 @@ function getResult(
   profileUserId: string,
   results: Results
 ): { label: string; className: string } {
+  if (match.status === "played") {
+    return { label: results.played, className: "text-zinc-500" };
+  }
   if (match.status === "forfeit") {
     if (match.winner_id === profileUserId) {
       return { label: results.win, className: "text-emerald-400" };

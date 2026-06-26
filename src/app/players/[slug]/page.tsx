@@ -36,10 +36,10 @@ export default async function PlayerProfilePage({
   const matchHistory = await getPublicMatchHistory(profile.id, 50);
 
   const wins = matchHistory.filter(
-    (m) => m.winner_id === profile.id && m.status === "confirmed"
+    (m) => m.winner_id === profile.id
   ).length;
-  const losses = matchHistory.filter(
-    (m) => m.winner_id !== null && m.winner_id !== profile.id && m.status === "confirmed"
+  const defeats = matchHistory.filter(
+    (m) => m.winner_id !== null && m.winner_id !== profile.id
   ).length;
   const forfeits = matchHistory.filter((m) => m.status === "forfeit").length;
 
@@ -116,7 +116,7 @@ export default async function PlayerProfilePage({
                 <div>
                   <div className="flex items-center justify-center gap-1">
                     <Swords className="h-3 w-3 text-red-400" />
-                    <span className="text-lg font-black text-red-400">{losses}</span>
+                    <span className="text-lg font-black text-red-400">{defeats}</span>
                   </div>
                   <p className="mt-0.5 text-[10px] font-black uppercase tracking-wider text-zinc-500">
                     {text.results.loss}

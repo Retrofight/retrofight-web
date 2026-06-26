@@ -11,6 +11,7 @@ export interface TelemetryEvent {
     punchOutcome?: "direct" | "timeout" | "failed" | null;
     punchReason?: string | null;
     probeLatencyMs?: number | null;
+    finalPath?: "direct" | "relay" | "none" | null;
     exitCode?: number | null;
     occurredAt: number;
 }

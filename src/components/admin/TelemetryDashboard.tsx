@@ -27,6 +27,12 @@ const PUNCH_COLORS: Record<string, string> = {
     failed: "text-red-400"
 };
 
+const PATH_COLORS: Record<string, string> = {
+    direct: "text-green-400",
+    relay: "text-orange-400",
+    none: "text-zinc-500"
+};
+
 function formatTime(ts: number): string {
     return new Date(ts).toISOString().replace("T", " ").slice(0, 19);
 }
@@ -176,6 +182,7 @@ export function TelemetryDashboard({ files, events, selectedDate }: TelemetryDas
                                                     <Zap className="h-3 w-3" /> Outcome
                                                 </span>
                                             </th>
+                                            <th className="pb-2 pr-4 font-semibold uppercase tracking-wider">Path</th>
                                             <th className="pb-2 font-semibold uppercase tracking-wider">Latency</th>
                                         </tr>
                                     </thead>
@@ -240,6 +247,9 @@ function EventRow({ event }: { event: TelemetryEvent }) {
                 {event.punchReason ? (
                     <span className="ml-1 text-[10px] text-zinc-600">({event.punchReason})</span>
                 ) : null}
+            </td>
+            <td className={`py-2 pr-4 font-semibold ${isNetplay && event.finalPath ? (PATH_COLORS[event.finalPath] ?? "text-zinc-400") : "text-zinc-600"}`}>
+                {isNetplay ? (event.finalPath ?? <span className="font-normal text-zinc-600">—</span>) : <span className="text-zinc-600">—</span>}
             </td>
             <td className="py-2 tabular-nums text-zinc-400">
                 {event.probeLatencyMs != null

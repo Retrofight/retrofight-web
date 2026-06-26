@@ -208,11 +208,17 @@ export const dictionary = {
       matchHistory: "Match history",
       noMatches: "No recorded matches.",
       columns: {
-        game: "Game",
-        opponent: "Opponent",
-        result: "Result",
-        score: "Score",
         date: "Date",
+        game: "Game",
+        type: "Type",
+        p1: "Player 1",
+        p2: "Player 2",
+        score: "Score",
+        result: "Result",
+      },
+      matchTypes: {
+        casual: "Casual",
+        ranked: "Ranked",
       },
       results: {
         win: "Win",

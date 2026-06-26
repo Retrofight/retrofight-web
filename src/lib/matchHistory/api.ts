@@ -8,6 +8,7 @@ export interface MatchHistoryEntry {
   p2_id: string | null;
   p2_name: string | null;
   game: string;
+  match_type: "casual" | "ranked" | null;
   winner_id: string | null;
   p1_score: number | null;
   p2_score: number | null;

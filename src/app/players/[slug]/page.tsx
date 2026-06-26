@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Calendar, Flag, Trophy } from "lucide-react";
+import { ArrowLeft, Calendar, Flag, Trophy, Swords, XCircle } from "lucide-react";
 import { MatchHistoryList } from "@/components/match-history/MatchHistoryList";
 import { getPublicProfileBySlug } from "@/lib/profiles/api";
 import { getPublicMatchHistory } from "@/lib/matchHistory/api";
@@ -33,7 +33,15 @@ export default async function PlayerProfilePage({
     notFound();
   }
 
-  const matchHistory = await getPublicMatchHistory(profile.id, 20);
+  const matchHistory = await getPublicMatchHistory(profile.id, 50);
+
+  const wins = matchHistory.filter(
+    (m) => m.winner_id === profile.id && m.status === "confirmed"
+  ).length;
+  const losses = matchHistory.filter(
+    (m) => m.winner_id !== null && m.winner_id !== profile.id && m.status === "confirmed"
+  ).length;
+  const forfeits = matchHistory.filter((m) => m.status === "forfeit").length;
 
   const joinedDate = new Date(profile.created_at).toLocaleDateString("en-US", {
     year: "numeric",
@@ -43,7 +51,7 @@ export default async function PlayerProfilePage({
 
   return (
     <main className="min-h-screen bg-dark-obsidian px-4 py-10 text-gray-100 sm:px-6">
-      <section className="mx-auto max-w-4xl">
+      <section className="mx-auto max-w-5xl">
         <Link
           href="/"
           className="inline-flex items-center gap-2 text-sm font-semibold text-brand-purple-400 transition hover:text-white"
@@ -95,16 +103,34 @@ export default async function PlayerProfilePage({
                 </span>
               </div>
 
-              <div className="flex items-center gap-2 text-sm text-zinc-400">
-                <Trophy className="h-4 w-4 shrink-0 text-brand-purple-400" />
-                <span>
-                  <span className="font-black text-white">
-                    {matchHistory.filter((m) => m.winner_id === profile.id).length}
-                  </span>{" "}
-                  wins in{" "}
-                  <span className="font-black text-white">{matchHistory.length}</span>{" "}
-                  matches
-                </span>
+              <div className="mt-2 grid grid-cols-3 gap-2 border-t border-white/10 pt-4 text-center">
+                <div>
+                  <div className="flex items-center justify-center gap-1">
+                    <Trophy className="h-3 w-3 text-emerald-400" />
+                    <span className="text-lg font-black text-emerald-400">{wins}</span>
+                  </div>
+                  <p className="mt-0.5 text-[10px] font-black uppercase tracking-wider text-zinc-500">
+                    {text.results.win}
+                  </p>
+                </div>
+                <div>
+                  <div className="flex items-center justify-center gap-1">
+                    <Swords className="h-3 w-3 text-red-400" />
+                    <span className="text-lg font-black text-red-400">{losses}</span>
+                  </div>
+                  <p className="mt-0.5 text-[10px] font-black uppercase tracking-wider text-zinc-500">
+                    {text.results.loss}
+                  </p>
+                </div>
+                <div>
+                  <div className="flex items-center justify-center gap-1">
+                    <XCircle className="h-3 w-3 text-amber-400" />
+                    <span className="text-lg font-black text-amber-400">{forfeits}</span>
+                  </div>
+                  <p className="mt-0.5 text-[10px] font-black uppercase tracking-wider text-zinc-500">
+                    {text.results.forfeit}
+                  </p>
+                </div>
               </div>
             </dl>
           </section>
@@ -121,6 +147,7 @@ export default async function PlayerProfilePage({
                 noMatchesText={text.noMatches}
                 columns={text.columns}
                 results={text.results}
+                matchTypes={text.matchTypes}
               />
             </div>
           </section>

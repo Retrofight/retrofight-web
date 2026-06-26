@@ -202,6 +202,7 @@ export default async function ProfilePage({
                   noMatchesText={text.noMatches}
                   columns={dictionary.players.columns}
                   results={dictionary.players.results}
+                  matchTypes={dictionary.players.matchTypes}
                 />
               </div>
             </section>

@@ -2,8 +2,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Calendar, Flag, Trophy, Swords, XCircle } from "lucide-react";
 import { MatchHistoryList } from "@/components/match-history/MatchHistoryList";
+import { PlayerRankingsPanel } from "@/components/ranking/PlayerRankingsPanel";
 import { getPublicProfileBySlug } from "@/lib/profiles/api";
 import { getPublicMatchHistory } from "@/lib/matchHistory/api";
+import { getPlayerGameRatings } from "@/lib/ranking/api";
 import { dictionary } from "../../dictionary";
 
 export async function generateMetadata({
@@ -33,7 +35,10 @@ export default async function PlayerProfilePage({
     notFound();
   }
 
-  const matchHistory = await getPublicMatchHistory(profile.id, 50);
+  const [matchHistory, gameRatings] = await Promise.all([
+    getPublicMatchHistory(profile.id, 50),
+    getPlayerGameRatings(profile.id),
+  ]);
 
   const wins = matchHistory.filter(
     (m) => m.winner_id === profile.id
@@ -135,22 +140,26 @@ export default async function PlayerProfilePage({
             </dl>
           </section>
 
-          {/* Match history */}
-          <section className="rounded-sm border border-white/10 bg-dark-card p-6 shadow-2xl shadow-black/30">
-            <h2 className="font-display text-xl font-black text-white">
-              {text.matchHistory}
-            </h2>
-            <div className="mt-5">
-              <MatchHistoryList
-                matches={matchHistory}
-                profileUserId={profile.id}
-                noMatchesText={text.noMatches}
-                columns={text.columns}
-                results={text.results}
-                matchTypes={text.matchTypes}
-              />
-            </div>
-          </section>
+          {/* Right column: rankings + match history */}
+          <div className="grid gap-5">
+            <PlayerRankingsPanel ratings={gameRatings} />
+
+            <section className="rounded-sm border border-white/10 bg-dark-card p-6 shadow-2xl shadow-black/30">
+              <h2 className="font-display text-xl font-black text-white">
+                {text.matchHistory}
+              </h2>
+              <div className="mt-5">
+                <MatchHistoryList
+                  matches={matchHistory}
+                  profileUserId={profile.id}
+                  noMatchesText={text.noMatches}
+                  columns={text.columns}
+                  results={text.results}
+                  matchTypes={text.matchTypes}
+                />
+              </div>
+            </section>
+          </div>
         </div>
       </section>
     </main>

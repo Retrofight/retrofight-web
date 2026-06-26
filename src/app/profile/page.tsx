@@ -5,9 +5,11 @@ import { DeleteAccountPanel } from "@/components/profile/DeleteAccountPanel";
 import { PrivacyConsentPanel } from "@/components/profile/PrivacyConsentPanel";
 import { ProfileEditPanel } from "@/components/profile/ProfileEditPanel";
 import { MatchHistoryList } from "@/components/match-history/MatchHistoryList";
+import { PlayerRankingsPanel } from "@/components/ranking/PlayerRankingsPanel";
 import { hasActivePrivacyConsent } from "@/lib/privacy/consent";
 import { getOwnProfile } from "@/lib/profiles/api";
 import { getOwnMatchHistory } from "@/lib/matchHistory/api";
+import { getPlayerGameRatings } from "@/lib/ranking/api";
 import { createClient } from "@/lib/supabase/server";
 import { dictionary, type Dictionary } from "../dictionary";
 import { signOut, updatePassword } from "./actions";
@@ -88,9 +90,10 @@ export default async function ProfilePage({
 
   const privacyConsentAccepted = hasActivePrivacyConsent(user?.user_metadata);
 
-  const [ownProfile, matchHistory] = await Promise.all([
+  const [ownProfile, matchHistory, gameRatings] = await Promise.all([
     user?.id ? getOwnProfile(user.id) : Promise.resolve(null),
     user?.id ? getOwnMatchHistory(user.id, 10) : Promise.resolve([]),
+    user?.id ? getPlayerGameRatings(user.id) : Promise.resolve([]),
   ]);
 
   const avatarUrl = ownProfile?.avatar_url ?? null;
@@ -187,6 +190,8 @@ export default async function ProfilePage({
                 {profileMessage}
               </p>
             ) : null}
+
+            <PlayerRankingsPanel ratings={gameRatings} />
 
             <section className="rounded-sm border border-white/10 bg-dark-card p-6 shadow-2xl shadow-black/30">
               <div className="flex items-center gap-3">

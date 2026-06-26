@@ -9,6 +9,8 @@ import {
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
+const COUNTRY_REGEX = /^[A-Z]{2}$/;
+
 function cleanText(value: FormDataEntryValue | null) {
   return typeof value === "string" ? value.trim() : "";
 }
@@ -98,6 +100,55 @@ export async function updatePrivacyConsent(formData: FormData) {
   redirect(`/profile?privacy=${accepted ? "accepted" : "revoked"}`);
 }
 
+export async function updateProfile(formData: FormData) {
+  const rawAvatarUrl = cleanText(formData.get("avatar_url"));
+  const rawCountry = cleanText(formData.get("country")).toUpperCase().slice(0, 2) || null;
+  const isPublic = formData.get("is_public") === "true";
+
+  let avatarUrl: string | null = null;
+  if (rawAvatarUrl) {
+    try {
+      const url = new URL(rawAvatarUrl);
+      if (url.protocol === "http:" || url.protocol === "https:") {
+        avatarUrl = rawAvatarUrl.slice(0, 512);
+      } else {
+        redirect("/profile?profile=update_failed");
+      }
+    } catch {
+      redirect("/profile?profile=update_failed");
+    }
+  }
+
+  if (rawCountry && !COUNTRY_REGEX.test(rawCountry)) {
+    redirect("/profile?profile=update_failed");
+  }
+
+  const supabase = await createClient();
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+  if (userError || !userData.user) {
+    redirect("/login");
+  }
+
+  let admin;
+  try {
+    admin = createAdminClient();
+  } catch {
+    redirect("/profile?profile=update_failed");
+  }
+
+  const { error } = await admin
+    .from("profiles")
+    .update({ avatar_url: avatarUrl, country: rawCountry, is_public: isPublic })
+    .eq("id", userData.user.id);
+
+  if (error) {
+    redirect("/profile?profile=update_failed");
+  }
+
+  revalidatePath("/profile");
+  redirect("/profile?profile=updated");
+}
+
 export async function deleteAccount(formData: FormData) {
   const confirmEmail = cleanText(formData.get("confirmEmail")).toLowerCase();
   const supabase = await createClient();
@@ -119,6 +170,11 @@ export async function deleteAccount(formData: FormData) {
   } catch {
     redirect("/profile?account=admin_unavailable");
   }
+
+  // Anonymize stored display names in match history before deleting the auth user.
+  // The player ID FK uses ON DELETE SET NULL, so the UUID link is severed on deletion.
+  await admin.from("match_history").update({ p1_name: null }).eq("p1_id", user.id);
+  await admin.from("match_history").update({ p2_name: null }).eq("p2_id", user.id);
 
   const { error } = await admin.auth.admin.deleteUser(user.id);
 

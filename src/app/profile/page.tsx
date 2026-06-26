@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Activity, KeyRound, LogOut, ShieldCheck, UserRound } from "lucide-react";
+import { Activity, History, KeyRound, LogOut, ShieldCheck, UserRound } from "lucide-react";
 import { DeleteAccountPanel } from "@/components/profile/DeleteAccountPanel";
 import { PrivacyConsentPanel } from "@/components/profile/PrivacyConsentPanel";
+import { ProfileEditPanel } from "@/components/profile/ProfileEditPanel";
+import { MatchHistoryList } from "@/components/match-history/MatchHistoryList";
 import { hasActivePrivacyConsent } from "@/lib/privacy/consent";
+import { getOwnProfile } from "@/lib/profiles/api";
+import { getOwnMatchHistory } from "@/lib/matchHistory/api";
 import { createClient } from "@/lib/supabase/server";
 import { dictionary, type Dictionary } from "../dictionary";
 import { signOut, updatePassword } from "./actions";
@@ -12,6 +16,7 @@ type ProfileDictionary = Dictionary["profile"];
 type PasswordStatus = keyof ProfileDictionary["passwordMessages"];
 type AccountStatus = keyof ProfileDictionary["accountMessages"];
 type PrivacyStatus = keyof ProfileDictionary["privacyMessages"];
+type ProfileStatus = keyof ProfileDictionary["profileMessages"];
 
 function isPasswordStatus(value: string | undefined): value is PasswordStatus {
   return (
@@ -40,12 +45,16 @@ function isPrivacyStatus(value: string | undefined): value is PrivacyStatus {
   );
 }
 
+function isProfileStatus(value: string | undefined): value is ProfileStatus {
+  return value === "updated" || value === "update_failed";
+}
+
 export default async function ProfilePage({
   searchParams,
 }: {
-  searchParams: Promise<{ account?: string; password?: string; privacy?: string }>;
+  searchParams: Promise<{ account?: string; password?: string; privacy?: string; profile?: string }>;
 }) {
-  const { account, password, privacy } = await searchParams;
+  const { account, password, privacy, profile } = await searchParams;
 
   const supabase = await createClient();
   const { data: claimsData, error: claimsError } =
@@ -63,6 +72,7 @@ export default async function ProfilePage({
       ? user.user_metadata.display_name
       : "-";
   const email = user?.email || claimsData.claims.email || "-";
+
   const passwordMessage = isPasswordStatus(password)
     ? text.passwordMessages[password]
     : null;
@@ -72,7 +82,20 @@ export default async function ProfilePage({
   const privacyMessage = isPrivacyStatus(privacy)
     ? text.privacyMessages[privacy]
     : null;
+  const profileMessage = isProfileStatus(profile)
+    ? text.profileMessages[profile]
+    : null;
+
   const privacyConsentAccepted = hasActivePrivacyConsent(user?.user_metadata);
+
+  const [ownProfile, matchHistory] = await Promise.all([
+    user?.id ? getOwnProfile(user.id) : Promise.resolve(null),
+    user?.id ? getOwnMatchHistory(user.id, 10) : Promise.resolve([]),
+  ]);
+
+  const avatarUrl = ownProfile?.avatar_url ?? null;
+  const country = ownProfile?.country ?? null;
+  const isPublic = ownProfile?.is_public ?? true;
 
   return (
     <main className="min-h-screen bg-dark-obsidian px-4 py-10 text-gray-100 sm:px-6">
@@ -86,6 +109,7 @@ export default async function ProfilePage({
         </Link>
 
         <div className="mt-10 grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
+          {/* Left column */}
           <section className="rounded-sm border border-white/10 bg-dark-card p-6 shadow-2xl shadow-black/30">
             <p className="font-pixel text-[10px] tracking-[0.24em] text-brand-purple-400">
               RetroFight
@@ -108,9 +132,7 @@ export default async function ProfilePage({
                   {text.email}
                   <span className="text-[10px] text-zinc-600">{text.readOnly}</span>
                 </dt>
-                <dd className="mt-1 text-sm text-white">
-                  {email}
-                </dd>
+                <dd className="mt-1 text-sm text-white">{email}</dd>
               </div>
               <div className="border-t border-white/10 pt-4">
                 <dt className="flex items-center justify-between gap-3 text-xs font-black uppercase text-zinc-500">
@@ -121,6 +143,17 @@ export default async function ProfilePage({
               </div>
             </dl>
 
+            {isPublic && (
+              <div className="mt-6 border-t border-white/10 pt-5">
+                <Link
+                  href={`/players/${encodeURIComponent(displayName)}`}
+                  className="text-sm font-semibold text-brand-purple-400 transition hover:text-white"
+                >
+                  {text.viewPublicProfile} →
+                </Link>
+              </div>
+            )}
+
             <form action={signOut} className="mt-8">
               <button className="inline-flex h-11 items-center justify-center gap-2 rounded-sm border border-white/10 px-4 text-sm font-black uppercase text-white transition hover:border-brand-purple-500">
                 <LogOut className="h-4 w-4" />
@@ -129,6 +162,7 @@ export default async function ProfilePage({
             </form>
           </section>
 
+          {/* Right column */}
           <div className="grid gap-5">
             <PrivacyConsentPanel
               accepted={privacyConsentAccepted}
@@ -140,6 +174,37 @@ export default async function ProfilePage({
                 {privacyMessage}
               </p>
             ) : null}
+
+            <ProfileEditPanel
+              avatarUrl={avatarUrl}
+              country={country}
+              isPublic={isPublic}
+              dictionary={text.editProfile}
+            />
+
+            {profileMessage ? (
+              <p className="border-l-2 border-brand-purple-500 bg-white/[0.04] px-4 py-3 text-sm font-semibold text-zinc-100">
+                {profileMessage}
+              </p>
+            ) : null}
+
+            <section className="rounded-sm border border-white/10 bg-dark-card p-6 shadow-2xl shadow-black/30">
+              <div className="flex items-center gap-3">
+                <History className="h-5 w-5 text-brand-purple-400" />
+                <h2 className="font-display text-xl font-black text-white">
+                  {text.matchHistoryTitle}
+                </h2>
+              </div>
+              <div className="mt-5">
+                <MatchHistoryList
+                  matches={matchHistory}
+                  profileUserId={user?.id ?? ""}
+                  noMatchesText={text.noMatches}
+                  columns={dictionary.players.columns}
+                  results={dictionary.players.results}
+                />
+              </div>
+            </section>
 
             <section className="rounded-sm border border-white/10 bg-dark-card p-6 shadow-2xl shadow-black/30">
               <div className="flex items-center gap-3">
@@ -158,10 +223,7 @@ export default async function ProfilePage({
                 </p>
               ) : null}
 
-              <form
-                action={updatePassword}
-                className="mt-6 grid gap-4"
-              >
+              <form action={updatePassword} className="mt-6 grid gap-4">
                 <label className="grid gap-2 text-sm font-semibold text-zinc-200">
                   <span>{text.currentPassword}</span>
                   <input

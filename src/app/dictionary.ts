@@ -152,6 +152,24 @@ export const dictionary = {
         admin_unavailable:
           "Account deletion is not configured for this environment.",
       },
+      editProfile: {
+        title: "Public profile",
+        description:
+          "Control your public profile visibility and add optional profile details.",
+        publicLabel: "Show my profile and match history publicly",
+        avatarUrl: "Avatar URL",
+        avatarUrlHint: "Direct link to an image (optional)",
+        country: "Country code",
+        countryHint: "Two-letter country code, e.g. IT or US (optional)",
+        save: "Save profile",
+      },
+      profileMessages: {
+        updated: "Profile updated.",
+        update_failed: "Profile could not be updated. Try again later.",
+      },
+      matchHistoryTitle: "Match history",
+      noMatches: "No matches recorded yet.",
+      viewPublicProfile: "View your public profile",
       deleteAccount: {
         title: "Delete account",
         description:
@@ -182,6 +200,26 @@ export const dictionary = {
           "No ROM files, game inputs, display names, or personally identifiable data are collected.",
         howToManage:
           "Diagnostic telemetry can be enabled or disabled from the Quick Actions menu inside the desktop client.",
+      },
+    },
+    players: {
+      home: "Back to home",
+      joined: "Member since",
+      matchHistory: "Match history",
+      noMatches: "No recorded matches.",
+      columns: {
+        game: "Game",
+        opponent: "Opponent",
+        result: "Result",
+        score: "Score",
+        date: "Date",
+      },
+      results: {
+        win: "Win",
+        loss: "Loss",
+        forfeit: "Forfeit",
+        disputed: "Disputed",
+        unknown: "—",
       },
     },
     home: {

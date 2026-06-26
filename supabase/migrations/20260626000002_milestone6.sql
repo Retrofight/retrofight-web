@@ -14,6 +14,10 @@ ALTER TABLE match_history
   ADD COLUMN IF NOT EXISTS ft_n       INTEGER;
 
 ALTER TABLE match_history
+  DROP CONSTRAINT IF EXISTS match_history_match_type_check,
+  DROP CONSTRAINT IF EXISTS match_history_ft_n_check;
+
+ALTER TABLE match_history
   ADD CONSTRAINT match_history_status_check
     CHECK (status IN ('played', 'confirmed', 'disputed', 'forfeit')),
   ADD CONSTRAINT match_history_match_type_check

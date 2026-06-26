@@ -41,7 +41,8 @@ export async function getOwnMatchHistory(userId: string, limit = 20): Promise<Ma
   return (data ?? []) as MatchHistoryEntry[];
 }
 
-// Used for public player profile pages — confirmed matches only
+// Used for public player profile pages — confirmed and forfeit matches
+// Disputed matches are excluded because they have no verified outcome.
 export async function getPublicMatchHistory(userId: string, limit = 20): Promise<MatchHistoryEntry[]> {
   let admin;
   try {
@@ -54,7 +55,7 @@ export async function getPublicMatchHistory(userId: string, limit = 20): Promise
     .from("match_history")
     .select("*")
     .or(`p1_id.eq.${userId},p2_id.eq.${userId}`)
-    .eq("status", "confirmed")
+    .in("status", ["confirmed", "forfeit"])
     .order("played_at", { ascending: false })
     .limit(limit);
 

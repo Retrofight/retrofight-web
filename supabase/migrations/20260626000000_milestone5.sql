@@ -79,11 +79,12 @@ DROP POLICY IF EXISTS "match_history_own_select" ON match_history;
 CREATE POLICY "match_history_own_select" ON match_history
   FOR SELECT USING (auth.uid() = p1_id OR auth.uid() = p2_id);
 
--- Confirmed matches between two public players are visible to everyone
+-- Confirmed and forfeit matches between two public players are visible to everyone.
+-- Disputed matches are excluded: no verified outcome, not suitable for public display.
 DROP POLICY IF EXISTS "match_history_public_select" ON match_history;
 CREATE POLICY "match_history_public_select" ON match_history
   FOR SELECT USING (
-    status = 'confirmed'
+    status IN ('confirmed', 'forfeit')
     AND EXISTS (SELECT 1 FROM profiles WHERE id = p1_id AND is_public = TRUE)
     AND EXISTS (SELECT 1 FROM profiles WHERE id = p2_id AND is_public = TRUE)
   );

@@ -52,6 +52,12 @@ export default function Navbar({
             >
               {dictionary.nav.wiki}
             </Link>
+            <Link
+              href="/matches"
+              className="hidden rounded-sm border border-white/10 px-3 py-2 text-xs font-semibold uppercase text-zinc-300 transition hover:border-brand-purple-500 hover:text-white sm:inline-flex"
+            >
+              {dictionary.nav.matches}
+            </Link>
             {isAuthenticated ? (
               <details className="group relative">
                 <summary

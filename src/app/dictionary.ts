@@ -21,6 +21,7 @@ export const dictionary = {
       downloads: "Downloads",
       wiki: "How to play",
       github: "GitHub",
+      matches: "Matches",
       auth: "Sign in / Register",
       profile: "Profile",
       userMenu: "User menu",

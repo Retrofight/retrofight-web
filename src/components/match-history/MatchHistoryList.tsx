@@ -44,11 +44,10 @@ function getResult(
   return { label: results.unknown, className: "text-zinc-500" };
 }
 
-function getScore(match: MatchHistoryEntry, profileUserId: string): string {
-  const myScore = match.p1_id === profileUserId ? match.p1_score : match.p2_score;
-  const oppScore = match.p1_id === profileUserId ? match.p2_score : match.p1_score;
-  if (myScore === null && oppScore === null) return "—";
-  return `${myScore ?? "?"} – ${oppScore ?? "?"}`;
+// Score is always shown as p1_score – p2_score to match the P1/P2 column order.
+function getScore(match: MatchHistoryEntry): string {
+  if (match.p1_score === null && match.p2_score === null) return "—";
+  return `${match.p1_score ?? "?"} – ${match.p2_score ?? "?"}`;
 }
 
 function formatDate(playedAt: string): string {
@@ -103,7 +102,7 @@ export function MatchHistoryList({
         <tbody>
           {matches.map((match) => {
             const { label, className } = getResult(match, profileUserId, results);
-            const score = getScore(match, profileUserId);
+            const score = getScore(match);
             const p1IsProfile = match.p1_id === profileUserId;
             return (
               <tr

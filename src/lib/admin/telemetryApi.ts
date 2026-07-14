@@ -39,9 +39,33 @@ export async function fetchTelemetryFiles(accessToken: string): Promise<Telemetr
     return json.files;
 }
 
-export async function fetchTelemetryEvents(accessToken: string, date: string): Promise<TelemetryEvent[]> {
+export interface TelemetryEventsQuery {
+    page?: number;
+    pageSize?: number;
+    type?: string;
+    user?: string;
+}
+
+export interface TelemetryEventsPage {
+    events: TelemetryEvent[];
+    page: number;
+    pageSize: number;
+    total: number;
+}
+
+export async function fetchTelemetryEvents(
+    accessToken: string,
+    date: string,
+    query: TelemetryEventsQuery = {}
+): Promise<TelemetryEventsPage> {
+    const params = new URLSearchParams({ date });
+    if (query.page) params.set("page", String(query.page));
+    if (query.pageSize) params.set("pageSize", String(query.pageSize));
+    if (query.type) params.set("type", query.type);
+    if (query.user) params.set("user", query.user);
+
     const res = await fetch(
-        `${serverUrl()}/api/admin/telemetry/events?date=${encodeURIComponent(date)}`,
+        `${serverUrl()}/api/admin/telemetry/events?${params.toString()}`,
         {
             headers: { Authorization: `Bearer ${accessToken}` },
             cache: "no-store"
@@ -52,6 +76,20 @@ export async function fetchTelemetryEvents(accessToken: string, date: string): P
         throw new Error(`Telemetry events request failed: HTTP ${res.status}`);
     }
 
-    const json = await res.json() as { date: string; events: TelemetryEvent[] };
-    return json.events;
+    const json = await res.json() as {
+        date: string;
+        events: TelemetryEvent[];
+        page?: number;
+        pageSize?: number;
+        total?: number;
+    };
+
+    return {
+        events: json.events,
+        page: json.page ?? query.page ?? 1,
+        pageSize: json.pageSize ?? query.pageSize ?? DEFAULT_TELEMETRY_PAGE_SIZE,
+        total: json.total ?? json.events.length
+    };
 }
+
+export const DEFAULT_TELEMETRY_PAGE_SIZE = 50;

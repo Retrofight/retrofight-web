@@ -1,14 +1,19 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useMemo } from "react";
-import { Activity, ChevronRight, Clock, Cpu, GamepadIcon, ShieldCheck, User, Zap } from "lucide-react";
+import { useState } from "react";
+import { Activity, ChevronLeft, ChevronRight, Clock, Cpu, GamepadIcon, User, Zap } from "lucide-react";
 import type { TelemetryEvent, TelemetryEventType, TelemetryFileEntry } from "@/lib/admin/telemetryApi";
 
 interface TelemetryDashboardProps {
     files: TelemetryFileEntry[];
     events: TelemetryEvent[];
     selectedDate: string;
+    page: number;
+    pageSize: number;
+    total: number;
+    typeFilter: TelemetryEventType | "all";
+    userFilter: string;
 }
 
 const TYPE_LABELS: Record<TelemetryEventType, string> = {
@@ -41,163 +46,174 @@ function shortId(userId: string): string {
     return userId.slice(0, 8);
 }
 
-export function TelemetryDashboard({ files, events, selectedDate }: TelemetryDashboardProps) {
+export function TelemetryDashboard({
+    files,
+    events,
+    selectedDate,
+    page,
+    pageSize,
+    total,
+    typeFilter,
+    userFilter
+}: TelemetryDashboardProps) {
     const router = useRouter();
-    const [typeFilter, setTypeFilter] = useState<TelemetryEventType | "all">("all");
-    const [userSearch, setUserSearch] = useState("");
+    const [userInput, setUserInput] = useState(userFilter);
 
-    const filtered = useMemo(() => {
-        let result = events;
-        if (typeFilter !== "all") {
-            result = result.filter(e => e.type === typeFilter);
-        }
-        if (userSearch.trim()) {
-            const q = userSearch.trim().toLowerCase();
-            result = result.filter(e => e.userId.toLowerCase().includes(q));
-        }
-        return result;
-    }, [events, typeFilter, userSearch]);
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    const rangeStart = total === 0 ? 0 : (page - 1) * pageSize + 1;
+    const rangeEnd = Math.min(page * pageSize, total);
 
-    function selectDate(date: string) {
-        router.push(`/admin/telemetry?date=${date}`);
+    // Rebuild the URL preserving the current filters, overriding the given keys.
+    function navigate(overrides: Record<string, string | number | undefined>) {
+        const params = new URLSearchParams();
+        params.set("date", selectedDate);
+        if (typeFilter !== "all") params.set("type", typeFilter);
+        if (userFilter) params.set("user", userFilter);
+        if (page > 1) params.set("page", String(page));
+
+        for (const [key, value] of Object.entries(overrides)) {
+            if (value === undefined || value === "" || value === "all") {
+                params.delete(key);
+            } else {
+                params.set(key, String(value));
+            }
+        }
+        router.push(`/admin/telemetry?${params.toString()}`);
     }
 
     return (
-        <main className="min-h-screen bg-dark-obsidian text-gray-100">
-            <header className="border-b border-white/10 px-6 py-4">
-                <div className="mx-auto flex max-w-7xl items-center gap-3">
-                    <ShieldCheck className="h-5 w-5 text-brand-purple-400" />
-                    <p className="font-pixel text-[10px] tracking-[0.24em] text-brand-purple-400">
-                        RetroFight
-                    </p>
-                    <ChevronRight className="h-3 w-3 text-zinc-600" />
-                    <h1 className="font-display text-lg font-black text-white">
-                        Telemetry Dashboard
-                    </h1>
+        <section className="min-w-0 rounded-sm border border-white/10 bg-dark-card p-4 shadow-2xl shadow-black/30">
+            {/* Toolbar */}
+            <div className="mb-4 flex flex-wrap items-center gap-3">
+                <div className="flex items-center gap-2">
+                    <Activity className="h-4 w-4 text-brand-purple-400" />
+                    <span className="font-display text-sm font-black text-white">Diagnostics</span>
+                    <span className="text-xs text-zinc-500">
+                        {total > 0 ? `${rangeStart}–${rangeEnd} of ${total}` : "no events"}
+                    </span>
                 </div>
-            </header>
 
-            <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
-                <div className="grid gap-4 lg:grid-cols-[220px_1fr]">
+                <div className="ml-auto flex flex-wrap items-center gap-2">
+                    {/* Date select */}
+                    <select
+                        value={selectedDate}
+                        onChange={e => navigate({ date: e.target.value, page: undefined })}
+                        className="h-8 rounded-sm border border-white/10 bg-black/40 px-2 text-xs text-white outline-none focus:border-brand-purple-500"
+                    >
+                        {files.length === 0 && <option value={selectedDate}>{selectedDate}</option>}
+                        {files.map(({ date, eventCount }) => (
+                            <option key={date} value={date}>
+                                {date} · {eventCount} event{eventCount !== 1 ? "s" : ""}
+                            </option>
+                        ))}
+                    </select>
 
-                    {/* Date sidebar */}
-                    <aside className="rounded-sm border border-white/10 bg-dark-card p-4 shadow-2xl shadow-black/30 lg:self-start">
-                        <p className="mb-3 text-[10px] font-black uppercase tracking-widest text-zinc-500">
-                            Log files
-                        </p>
-                        {files.length === 0 ? (
-                            <p className="text-sm text-zinc-500">No telemetry files yet.</p>
-                        ) : (
-                            <ul className="space-y-1">
-                                {files.map(({ date, eventCount }) => (
-                                    <li key={date}>
-                                        <button
-                                            onClick={() => selectDate(date)}
-                                            className={`w-full rounded-sm px-3 py-2 text-left transition ${
-                                                date === selectedDate
-                                                    ? "bg-brand-purple-600/20 text-brand-purple-300"
-                                                    : "text-zinc-300 hover:bg-white/5"
-                                            }`}
-                                        >
-                                            <span className="block text-sm font-semibold">{date}</span>
-                                            <span className="text-xs text-zinc-500">
-                                                {eventCount} event{eventCount !== 1 ? "s" : ""}
-                                            </span>
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </aside>
+                    {/* Type filter */}
+                    <select
+                        value={typeFilter}
+                        onChange={e => navigate({ type: e.target.value, page: undefined })}
+                        className="h-8 rounded-sm border border-white/10 bg-black/40 px-2 text-xs text-white outline-none focus:border-brand-purple-500"
+                    >
+                        <option value="all">All types</option>
+                        <option value="netplay_attempt">Netplay</option>
+                        <option value="runtime_crash">Crash</option>
+                    </select>
 
-                    {/* Events panel */}
-                    <section className="min-w-0 rounded-sm border border-white/10 bg-dark-card p-4 shadow-2xl shadow-black/30">
-                        {/* Toolbar */}
-                        <div className="mb-4 flex flex-wrap items-center gap-3">
-                            <div className="flex items-center gap-2">
-                                <Activity className="h-4 w-4 text-brand-purple-400" />
-                                <span className="font-display text-sm font-black text-white">
-                                    {selectedDate}
-                                </span>
-                                <span className="text-xs text-zinc-500">
-                                    ({filtered.length} / {events.length})
-                                </span>
-                            </div>
-
-                            <div className="ml-auto flex flex-wrap items-center gap-2">
-                                <select
-                                    value={typeFilter}
-                                    onChange={e => setTypeFilter(e.target.value as TelemetryEventType | "all")}
-                                    className="h-8 rounded-sm border border-white/10 bg-black/40 px-2 text-xs text-white outline-none focus:border-brand-purple-500"
-                                >
-                                    <option value="all">All types</option>
-                                    <option value="netplay_attempt">Netplay</option>
-                                    <option value="runtime_crash">Crash</option>
-                                </select>
-
-                                <input
-                                    type="text"
-                                    placeholder="Filter by user ID…"
-                                    value={userSearch}
-                                    onChange={e => setUserSearch(e.target.value)}
-                                    className="h-8 w-40 rounded-sm border border-white/10 bg-black/40 px-2 text-xs text-white placeholder-zinc-600 outline-none focus:border-brand-purple-500"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Table */}
-                        {filtered.length === 0 ? (
-                            <p className="py-12 text-center text-sm text-zinc-500">
-                                No events match the current filters.
-                            </p>
-                        ) : (
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-left text-xs">
-                                    <thead>
-                                        <tr className="border-b border-white/10 text-zinc-500">
-                                            <th className="pb-2 pr-4 font-semibold uppercase tracking-wider">
-                                                <span className="flex items-center gap-1">
-                                                    <Clock className="h-3 w-3" /> Time
-                                                </span>
-                                            </th>
-                                            <th className="pb-2 pr-4 font-semibold uppercase tracking-wider">Type</th>
-                                            <th className="pb-2 pr-4 font-semibold uppercase tracking-wider">
-                                                <span className="flex items-center gap-1">
-                                                    <User className="h-3 w-3" /> User
-                                                </span>
-                                            </th>
-                                            <th className="pb-2 pr-4 font-semibold uppercase tracking-wider">
-                                                <span className="flex items-center gap-1">
-                                                    <GamepadIcon className="h-3 w-3" /> Game
-                                                </span>
-                                            </th>
-                                            <th className="pb-2 pr-4 font-semibold uppercase tracking-wider">
-                                                <span className="flex items-center gap-1">
-                                                    <Cpu className="h-3 w-3" /> Client
-                                                </span>
-                                            </th>
-                                            <th className="pb-2 pr-4 font-semibold uppercase tracking-wider">Candidate</th>
-                                            <th className="pb-2 pr-4 font-semibold uppercase tracking-wider">
-                                                <span className="flex items-center gap-1">
-                                                    <Zap className="h-3 w-3" /> Outcome
-                                                </span>
-                                            </th>
-                                            <th className="pb-2 pr-4 font-semibold uppercase tracking-wider">Path</th>
-                                            <th className="pb-2 font-semibold uppercase tracking-wider">Latency</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-white/5">
-                                        {filtered.map((event, i) => (
-                                            <EventRow key={i} event={event} />
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        )}
-                    </section>
+                    {/* User filter */}
+                    <form
+                        onSubmit={e => {
+                            e.preventDefault();
+                            navigate({ user: userInput.trim() || undefined, page: undefined });
+                        }}
+                    >
+                        <input
+                            type="text"
+                            placeholder="Filter by user ID…"
+                            value={userInput}
+                            onChange={e => setUserInput(e.target.value)}
+                            className="h-8 w-44 rounded-sm border border-white/10 bg-black/40 px-2 text-xs text-white placeholder-zinc-600 outline-none focus:border-brand-purple-500"
+                        />
+                    </form>
                 </div>
             </div>
-        </main>
+
+            {/* Table */}
+            {events.length === 0 ? (
+                <p className="py-12 text-center text-sm text-zinc-500">
+                    No events match the current filters.
+                </p>
+            ) : (
+                <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                        <thead>
+                            <tr className="border-b border-white/10 text-zinc-500">
+                                <th className="pb-2 pr-4 font-semibold uppercase tracking-wider">
+                                    <span className="flex items-center gap-1">
+                                        <Clock className="h-3 w-3" /> Time
+                                    </span>
+                                </th>
+                                <th className="pb-2 pr-4 font-semibold uppercase tracking-wider">Type</th>
+                                <th className="pb-2 pr-4 font-semibold uppercase tracking-wider">
+                                    <span className="flex items-center gap-1">
+                                        <User className="h-3 w-3" /> User
+                                    </span>
+                                </th>
+                                <th className="pb-2 pr-4 font-semibold uppercase tracking-wider">
+                                    <span className="flex items-center gap-1">
+                                        <GamepadIcon className="h-3 w-3" /> Game
+                                    </span>
+                                </th>
+                                <th className="pb-2 pr-4 font-semibold uppercase tracking-wider">
+                                    <span className="flex items-center gap-1">
+                                        <Cpu className="h-3 w-3" /> Client
+                                    </span>
+                                </th>
+                                <th className="pb-2 pr-4 font-semibold uppercase tracking-wider">Candidate</th>
+                                <th className="pb-2 pr-4 font-semibold uppercase tracking-wider">
+                                    <span className="flex items-center gap-1">
+                                        <Zap className="h-3 w-3" /> Outcome
+                                    </span>
+                                </th>
+                                <th className="pb-2 pr-4 font-semibold uppercase tracking-wider">Path</th>
+                                <th className="pb-2 font-semibold uppercase tracking-wider">Latency</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-white/5">
+                            {events.map((event, i) => (
+                                <EventRow key={`${event.occurredAt}-${i}`} event={event} />
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+
+            {/* Pagination */}
+            {total > 0 && (
+                <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-3 text-xs text-zinc-400">
+                    <span>
+                        Page {page} of {totalPages}
+                    </span>
+                    <div className="flex items-center gap-2">
+                        <button
+                            type="button"
+                            disabled={page <= 1}
+                            onClick={() => navigate({ page: page - 1 })}
+                            className="flex items-center gap-1 rounded-sm border border-white/10 px-2 py-1 transition hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-40"
+                        >
+                            <ChevronLeft className="h-3 w-3" /> Prev
+                        </button>
+                        <button
+                            type="button"
+                            disabled={page >= totalPages}
+                            onClick={() => navigate({ page: page + 1 })}
+                            className="flex items-center gap-1 rounded-sm border border-white/10 px-2 py-1 transition hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-40"
+                        >
+                            Next <ChevronRight className="h-3 w-3" />
+                        </button>
+                    </div>
+                </div>
+            )}
+        </section>
     );
 }
 

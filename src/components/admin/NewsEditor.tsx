@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ImageIcon, X } from "lucide-react";
 import type { NewsCategory, NewsRow } from "@/lib/admin/news";
 import { slugify } from "@/lib/admin/slug";
 import { saveNews } from "@/app/admin/news/actions";
+import { MediaLibrary } from "@/components/admin/MediaLibrary";
 
 interface NewsEditorProps {
     categories: NewsCategory[];
@@ -26,6 +27,8 @@ export function NewsEditor({ categories, news, error }: NewsEditorProps) {
     const [title, setTitle] = useState(news?.title ?? "");
     const [slug, setSlug] = useState(news?.slug ?? "");
     const [slugTouched, setSlugTouched] = useState(Boolean(news?.slug));
+    const [coverUrl, setCoverUrl] = useState(news?.cover_image_url ?? "");
+    const [libraryOpen, setLibraryOpen] = useState(false);
 
     function onTitleChange(value: string) {
         setTitle(value);
@@ -132,28 +135,45 @@ export function NewsEditor({ categories, news, error }: NewsEditorProps) {
 
                 <div className="space-y-2 rounded-sm border border-white/10 bg-black/20 p-3">
                     <label className={labelClass}>Cover image</label>
-                    {news?.cover_image_url && (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                            src={news.cover_image_url}
-                            alt="Current cover"
-                            className="mb-2 max-h-40 rounded-sm border border-white/10 object-cover"
-                        />
+                    {/* Cover URL is driven by state: the media library sets it, the
+                        Remove button clears it (empty submits as null → no cover). */}
+                    <input type="hidden" name="cover_image_url" value={coverUrl} />
+
+                    {coverUrl ? (
+                        <div className="flex items-start gap-3">
+                            <div className="inline-flex max-w-[160px] overflow-hidden rounded-sm border border-white/10 bg-black/40 p-1">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src={coverUrl} alt="Cover" className="max-h-24 w-auto object-contain" />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setLibraryOpen(true)}
+                                    className="flex h-8 items-center gap-1 rounded-sm border border-white/10 px-3 text-xs font-semibold text-zinc-300 transition hover:bg-white/5"
+                                >
+                                    <ImageIcon className="h-3 w-3" /> Change
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setCoverUrl("")}
+                                    className="flex h-8 items-center gap-1 rounded-sm border border-red-500/30 px-3 text-xs font-semibold text-red-300 transition hover:bg-red-900/20"
+                                >
+                                    <X className="h-3 w-3" /> Remove
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <button
+                            type="button"
+                            onClick={() => setLibraryOpen(true)}
+                            className="flex h-8 items-center gap-1 rounded-sm bg-brand-purple-600 px-3 text-xs font-semibold text-white transition hover:bg-brand-purple-500"
+                        >
+                            <ImageIcon className="h-3 w-3" /> Choose / upload image
+                        </button>
                     )}
-                    <input
-                        name="cover_file"
-                        type="file"
-                        accept="image/*"
-                        className="block w-full text-xs text-zinc-400 file:mr-3 file:rounded-sm file:border-0 file:bg-brand-purple-600 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-brand-purple-500"
-                    />
-                    <p className="text-[11px] text-zinc-600">Upload an image, or paste a URL below.</p>
-                    <input
-                        name="cover_image_url"
-                        type="url"
-                        defaultValue={news?.cover_image_url ?? ""}
-                        placeholder="https://…"
-                        className={inputClass}
-                    />
+                    <p className="text-[11px] text-zinc-600">
+                        Pick from the library or upload a new image. Images are reusable across posts.
+                    </p>
                 </div>
 
                 <div className="flex justify-end gap-2 pt-1">
@@ -171,6 +191,17 @@ export function NewsEditor({ categories, news, error }: NewsEditorProps) {
                     </button>
                 </div>
             </form>
+
+            {libraryOpen && (
+                <MediaLibrary
+                    selectedUrl={coverUrl || null}
+                    onSelect={url => {
+                        setCoverUrl(url);
+                        setLibraryOpen(false);
+                    }}
+                    onClose={() => setLibraryOpen(false)}
+                />
+            )}
         </div>
     );
 }

@@ -40,6 +40,17 @@ export default async function NewsArticlePage({ params }: PageProps) {
                     <ArrowLeft className="h-4 w-4" /> Back to News
                 </Link>
 
+                {news.cover_image_url && (
+                    <div className="mt-6 inline-flex max-w-[200px] overflow-hidden rounded-sm border border-white/10 bg-black/40 p-1">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                            src={news.cover_image_url}
+                            alt=""
+                            className="max-h-28 w-auto object-contain"
+                        />
+                    </div>
+                )}
+
                 <div className="mt-6 flex items-center gap-2">
                     {news.category && (
                         <span
@@ -60,15 +71,6 @@ export default async function NewsArticlePage({ params }: PageProps) {
                 </h1>
 
                 {news.summary && <p className="mt-4 text-lg text-zinc-400">{news.summary}</p>}
-
-                {news.cover_image_url && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                        src={news.cover_image_url}
-                        alt=""
-                        className="mt-6 w-full rounded-sm border border-white/10 object-cover"
-                    />
-                )}
 
                 {news.body && (
                     <div className="mt-8 whitespace-pre-wrap text-[15px] leading-relaxed text-zinc-200">

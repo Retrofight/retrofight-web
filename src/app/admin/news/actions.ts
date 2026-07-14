@@ -5,10 +5,8 @@ import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { slugify } from "@/lib/admin/slug";
+import { uploadNewsImage } from "@/lib/admin/media";
 import type { SupabaseClient } from "@supabase/supabase-js";
-
-const MAX_COVER_BYTES = 5 * 1024 * 1024;
-const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"]);
 
 function clean(value: FormDataEntryValue | null): string {
     return typeof value === "string" ? value.trim() : "";
@@ -32,23 +30,6 @@ async function ensureUniqueSlug(
     return `${root}-${Date.now()}`;
 }
 
-async function uploadCover(admin: SupabaseClient, file: File): Promise<string | null> {
-    if (!ALLOWED_IMAGE_TYPES.has(file.type) || file.size === 0 || file.size > MAX_COVER_BYTES) {
-        return null;
-    }
-    const ext = file.name.includes(".") ? file.name.split(".").pop()!.toLowerCase() : "bin";
-    const path = `covers/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-    const bytes = new Uint8Array(await file.arrayBuffer());
-
-    const { error } = await admin.storage.from("news").upload(path, bytes, {
-        contentType: file.type,
-        upsert: false
-    });
-    if (error) return null;
-
-    return admin.storage.from("news").getPublicUrl(path).data.publicUrl;
-}
-
 export async function saveNews(formData: FormData): Promise<void> {
     const { userId } = await requireAdmin();
     const admin = createAdminClient();
@@ -67,12 +48,12 @@ export async function saveNews(formData: FormData): Promise<void> {
     const categoryId = clean(formData.get("category_id")) || null;
     const status = clean(formData.get("status")) === "published" ? "published" : "draft";
 
-    // Cover: uploaded file wins over the manual URL fallback.
+    // Cover: an uploaded file wins over the URL (empty URL clears the cover).
     let coverUrl: string | null = clean(formData.get("cover_image_url")) || null;
     const file = formData.get("cover_file");
     if (file instanceof File && file.size > 0) {
-        const uploaded = await uploadCover(admin, file);
-        if (uploaded) coverUrl = uploaded;
+        const uploaded = await uploadNewsImage(file);
+        if (uploaded) coverUrl = uploaded.url;
     }
 
     const record: Record<string, unknown> = {

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ShieldCheck, Trophy } from "lucide-react";
+import { Trophy } from "lucide-react";
 
 const SUPPORTED_GAMES: Array<{ driver: string; name: string }> = [
   { driver: "sf2ce", name: "Street Fighter II: Champion Edition" },
@@ -20,15 +20,7 @@ export default function LeaderboardIndexPage() {
   return (
     <main className="min-h-screen bg-dark-obsidian px-4 py-10 text-gray-100 sm:px-6">
       <section className="mx-auto max-w-2xl">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-brand-purple-400 transition hover:text-white"
-        >
-          <ShieldCheck className="h-4 w-4" />
-          RetroFight
-        </Link>
-
-        <div className="mt-10 flex items-center gap-3">
+        <div className="flex items-center gap-3">
           <Trophy className="h-6 w-6 text-brand-purple-400" />
           <h1 className="font-display text-4xl font-black tracking-normal text-white">
             Leaderboard

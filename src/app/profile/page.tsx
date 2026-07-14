@@ -104,15 +104,7 @@ export default async function ProfilePage({
   return (
     <main className="min-h-screen bg-dark-obsidian px-4 py-10 text-gray-100 sm:px-6">
       <section className="mx-auto max-w-4xl">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-brand-purple-400 transition hover:text-white"
-        >
-          <ShieldCheck className="h-4 w-4" />
-          {text.home}
-        </Link>
-
-        <div className="mt-10 grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
+        <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
           {/* Left column */}
           <section className="rounded-sm border border-white/10 bg-dark-card p-6 shadow-2xl shadow-black/30">
             <p className="font-pixel text-[10px] tracking-[0.24em] text-brand-purple-400">

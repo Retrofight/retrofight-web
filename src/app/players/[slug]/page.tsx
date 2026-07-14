@@ -1,6 +1,5 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Calendar, Flag, Trophy, Swords, XCircle } from "lucide-react";
+import { Calendar, Flag, Trophy, Swords, XCircle } from "lucide-react";
 import { MatchHistoryList } from "@/components/match-history/MatchHistoryList";
 import { PlayerRankingsPanel } from "@/components/ranking/PlayerRankingsPanel";
 import { getPublicProfileBySlug } from "@/lib/profiles/api";
@@ -57,15 +56,7 @@ export default async function PlayerProfilePage({
   return (
     <main className="min-h-screen bg-dark-obsidian px-4 py-10 text-gray-100 sm:px-6">
       <section className="mx-auto max-w-5xl">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-brand-purple-400 transition hover:text-white"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          {text.home}
-        </Link>
-
-        <div className="mt-10 grid gap-5 lg:grid-cols-[auto_1fr]">
+        <div className="grid gap-5 lg:grid-cols-[auto_1fr]">
           {/* Profile card */}
           <section className="rounded-sm border border-white/10 bg-dark-card p-6 shadow-2xl shadow-black/30 lg:w-64">
             <p className="font-pixel text-[10px] tracking-[0.24em] text-brand-purple-400">

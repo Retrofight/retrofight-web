@@ -34,14 +34,7 @@ export default async function NewsPage({ searchParams }: PageProps) {
     return (
         <main className="min-h-screen bg-dark-obsidian px-4 py-10 text-gray-100 sm:px-6">
             <section className="mx-auto max-w-5xl">
-                <Link
-                    href="/"
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-brand-purple-400 transition hover:text-white"
-                >
-                    RetroFight
-                </Link>
-
-                <div className="mt-8 flex items-center gap-3">
+                <div className="flex items-center gap-3">
                     <Newspaper className="h-6 w-6 text-brand-purple-400" />
                     <div>
                         <h1 className="font-display text-3xl font-black text-white">News</h1>

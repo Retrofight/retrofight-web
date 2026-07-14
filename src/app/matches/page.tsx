@@ -55,14 +55,7 @@ export default async function MatchesPage({ searchParams }: PageProps) {
   return (
     <main className="min-h-screen bg-dark-obsidian px-4 py-10 text-gray-100 sm:px-6">
       <section className="mx-auto max-w-6xl">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-brand-purple-400 transition hover:text-white"
-        >
-          RetroFight
-        </Link>
-
-        <div className="mt-8 flex items-center gap-3">
+        <div className="flex items-center gap-3">
           <Swords className="h-6 w-6 text-brand-purple-400" />
           <div>
             <h1 className="font-display text-3xl font-black tracking-normal text-white">

@@ -68,6 +68,7 @@ export default async function ProfilePage({
 
   const { data } = await supabase.auth.getUser();
   const user = data.user;
+  const isAdmin = user?.app_metadata?.role === "admin";
   const text = dictionary.profile;
   const displayName =
     typeof user?.user_metadata?.display_name === "string"
@@ -153,6 +154,18 @@ export default async function ProfilePage({
                   className="text-sm font-semibold text-brand-purple-400 transition hover:text-white"
                 >
                   {text.viewPublicProfile} →
+                </Link>
+              </div>
+            )}
+
+            {isAdmin && (
+              <div className="mt-6 border-t border-white/10 pt-5">
+                <Link
+                  href="/admin"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-sm bg-brand-purple-600 px-4 text-sm font-black uppercase text-white transition hover:bg-brand-purple-500"
+                >
+                  <ShieldCheck className="h-4 w-4" />
+                  Admin dashboard
                 </Link>
               </div>
             )}

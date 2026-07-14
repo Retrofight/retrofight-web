@@ -41,13 +41,15 @@ export default async function NewsArticlePage({ params }: PageProps) {
                 </Link>
 
                 {news.cover_image_url && (
-                    <div className="mt-6 inline-flex max-w-[200px] overflow-hidden rounded-sm border border-white/10 bg-black/40 p-1">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                            src={news.cover_image_url}
-                            alt=""
-                            className="max-h-28 w-auto object-contain"
-                        />
+                    <div className="mt-8">
+                        <div className="inline-flex max-w-[160px] overflow-hidden rounded-sm border border-white/10 bg-black/40 p-1">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                                src={news.cover_image_url}
+                                alt=""
+                                className="max-h-24 w-auto object-contain"
+                            />
+                        </div>
                     </div>
                 )}
 

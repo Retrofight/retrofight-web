@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Activity, ChevronRight, Newspaper, ShieldCheck, Users } from "lucide-react";
+import { Activity, ChevronRight, Home, Newspaper, ShieldCheck, Users } from "lucide-react";
 
 const NAV = [
     { href: "/admin/telemetry", label: "Telemetry", icon: Activity },
@@ -44,6 +44,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                                 </Link>
                             );
                         })}
+                        <span className="mx-1 h-5 w-px bg-white/10" />
+                        <Link
+                            href="/"
+                            className="flex items-center gap-2 rounded-sm px-3 py-1.5 text-sm font-semibold text-zinc-400 transition hover:bg-white/5 hover:text-zinc-200"
+                        >
+                            <Home className="h-4 w-4" />
+                            Site
+                        </Link>
                     </nav>
                 </div>
             </header>

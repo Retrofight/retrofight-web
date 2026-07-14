@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { dictionary } from "./dictionary";
+import { createClient } from "@/lib/supabase/server";
+import { SiteChrome } from "@/components/site/SiteChrome";
 
 export const metadata: Metadata = {
   title: "RetroFight - Windows arcade netplay beta",
@@ -10,14 +13,22 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getClaims();
+  const isAuthenticated = Boolean(data?.claims);
+
   return (
     <html lang="en" className="h-full antialiased">
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <SiteChrome dictionary={dictionary} isAuthenticated={isAuthenticated}>
+          {children}
+        </SiteChrome>
+      </body>
     </html>
   );
 }

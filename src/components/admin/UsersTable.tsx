@@ -1,8 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import {
+    Activity,
     ChevronLeft,
     ChevronRight,
     Plus,
@@ -414,6 +416,12 @@ function EditUserModal({
 
             {/* Status actions */}
             <div className="flex flex-wrap gap-2 border-t border-white/10 pt-4">
+                <Link
+                    href={`/admin/telemetry?user=${encodeURIComponent(user.id)}`}
+                    className="flex h-8 items-center gap-1 rounded-sm border border-white/10 px-3 text-xs font-semibold text-zinc-300 transition hover:bg-white/5"
+                >
+                    <Activity className="h-3 w-3" /> Telemetry
+                </Link>
                 {!confirmed && (
                     <form action={confirmUserEmail}>
                         <input type="hidden" name="userId" value={user.id} />

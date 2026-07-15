@@ -3,15 +3,15 @@ import { downloadDisclaimerMarkdown } from "@/lib/legal/documents";
 const shared = {
   githubOrg: "https://github.com/Retrofight",
   releaseUrl:
-    "https://github.com/Retrofight/retrofight-releases/releases/tag/v0.7.6-beta.0",
+    "https://github.com/Retrofight/retrofight-releases/releases/latest",
   installerUrl:
-    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.7.6-beta.0/RetroFight-Windows-Setup-0.7.6-beta.0-x64.exe",
+    "https://github.com/Retrofight/retrofight-releases/releases/latest/download/RetroFight-Windows-Setup-x64.exe",
   portableUrl:
-    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.7.6-beta.0/RetroFight-Windows-0.7.6-beta.0-x64.zip",
+    "https://github.com/Retrofight/retrofight-releases/releases/latest/download/RetroFight-Windows-x64.zip",
   linuxAppImageUrl:
-    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.7.6-beta.0/RetroFight-Linux-0.7.6-beta.0-x86_64.AppImage",
+    "https://github.com/Retrofight/retrofight-releases/releases/latest/download/RetroFight-Linux-x86_64.AppImage",
   linuxDebUrl:
-    "https://github.com/Retrofight/retrofight-releases/releases/download/v0.7.6-beta.0/RetroFight-Linux-0.7.6-beta.0-amd64.deb",
+    "https://github.com/Retrofight/retrofight-releases/releases/latest/download/RetroFight-Linux-amd64.deb",
 };
 
 export const dictionary = {
@@ -232,13 +232,13 @@ export const dictionary = {
       },
     },
     home: {
-      badge: "Beta test version",
+      badge: "Production release",
       title: "RetroFight",
       subtitle:
         "A desktop arcade fighting game matchmaking client focused on direct, low-latency 1v1 play.",
       intro:
         "RetroFight combines a desktop client for Windows and Linux, online lobbies, match challenges, and a custom RetroFight FBNeo runtime built for competitive arcade sessions.",
-      platforms: "Beta builds for Windows and Linux.",
+      platforms: "Available for Windows and Linux.",
       downloadWindowsInstaller: "Windows installer",
       downloadWindowsPortable: "Windows portable zip",
       downloadLinuxAppImage: "Linux AppImage",
@@ -265,8 +265,8 @@ export const dictionary = {
       ],
       cards: [
         {
-          title: "Beta for testing",
-          text: "The current release is a beta focused on stable direct online play, clear connection feedback, and clean Windows and Linux packages.",
+          title: "Production release",
+          text: "The current release is a production build focused on stable direct online play, clear connection feedback, and clean Windows and Linux packages.",
         },
         {
           title: "Custom FBNeo runtime",
@@ -286,20 +286,20 @@ export const dictionary = {
         "Author: Stefano, RetroFight project.",
         "The project is present on GitHub under the RetroFight organization.",
         "The architecture is open source. The Electron client, the heart of the project, is not open source.",
-        "Some mature-platform features are outside the first beta, including accounts, rankings, spectator mode, advanced chat, and relay fallback for networks where direct play is not possible.",
+        "Some features are still on the roadmap, including rankings, spectator mode, advanced chat, and relay fallback for networks where direct play is not possible.",
       ],
       githubCta: "Open RetroFight on GitHub",
     },
     wiki: {
-      title: "How to Play RetroFight Beta",
-      subtitle: "Basic RetroFight beta flow for Windows and Linux users.",
+      title: "How to Play RetroFight",
+      subtitle: "Basic RetroFight flow for Windows and Linux users.",
       back: "Back to home",
       sections: [
         {
           title: "Before You Start",
           items: [
             "A Windows or Linux PC.",
-            "A RetroFight beta release build.",
+            "A RetroFight release build.",
             "Network access to the RetroFight server.",
             "Permission for RetroFight and RetroFight FBNeo through your firewall.",
             "Game files that you legally own and are authorized to use.",
@@ -310,8 +310,8 @@ export const dictionary = {
           title: "Install Or Launch",
           items: [
             "On Windows, run the setup EXE or extract the portable ZIP.",
-            "On Linux, use the AppImage or install the deb package. The beta package includes the Wine runtime used to launch RetroFight FBNeo.",
-            "If your OS blocks the first launch, allow the downloaded beta package and try again.",
+            "On Linux, use the AppImage or install the deb package. The Linux package includes the Wine runtime used to launch RetroFight FBNeo.",
+            "If your OS blocks the first launch, allow the downloaded package and try again.",
           ],
         },
         {
@@ -334,7 +334,7 @@ export const dictionary = {
             "Play the match.",
             "When the runtime closes, RetroFight returns to the lobby.",
           ],
-          note: "Ranked play is disabled by default during the beta release.",
+          note: "Ranked play is disabled by default in the current release.",
         },
         {
           title: "Connection Status",
@@ -344,7 +344,7 @@ export const dictionary = {
             "Connected: the direct path is ready and the runtime can start.",
             "Direct failed: UDP direct play did not succeed.",
           ],
-          note: "If direct UDP fails, this beta cannot automatically recover through a relay.",
+          note: "If direct UDP fails, RetroFight cannot automatically recover through a relay.",
         },
         {
           title: "Troubleshooting",
@@ -378,9 +378,9 @@ export const dictionary = {
               title: "UDP direct failed",
               items: [
                 "Allow RetroFight and RetroFight FBNeo through your firewall.",
-                "Avoid VPNs, hotspots, hotel networks, school networks, office networks, or restrictive routers during beta testing.",
+                "Avoid VPNs, hotspots, hotel networks, school networks, office networks, or restrictive routers when testing your connection.",
                 "Try again from a home network.",
-                "If the network blocks UDP direct traffic, this beta does not provide a relay fallback.",
+                "If the network blocks UDP direct traffic, RetroFight does not provide a relay fallback.",
               ],
             },
             {

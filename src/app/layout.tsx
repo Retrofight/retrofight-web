@@ -5,9 +5,9 @@ import { createClient } from "@/lib/supabase/server";
 import { SiteChrome } from "@/components/site/SiteChrome";
 
 export const metadata: Metadata = {
-  title: "RetroFight - Windows arcade netplay beta",
+  title: "RetroFight - Arcade netplay for Windows and Linux",
   description:
-    "RetroFight is a Windows arcade fighting game matchmaking client with a custom FBNeo runtime and GGPO integration.",
+    "RetroFight is an arcade fighting game matchmaking client for Windows and Linux with a custom FBNeo runtime and GGPO integration.",
   icons: {
     icon: "/retrofight.ico",
   },

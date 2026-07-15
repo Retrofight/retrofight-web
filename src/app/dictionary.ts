@@ -237,7 +237,7 @@ export const dictionary = {
       subtitle:
         "A desktop arcade fighting game matchmaking client focused on direct, low-latency 1v1 play.",
       intro:
-        "RetroFight combines a desktop client for Windows and Linux, online lobbies, match challenges, and a custom RetroFight FBNeo runtime built for competitive arcade sessions.",
+        "RetroFight combines a desktop client for Windows and Linux, background matchmaking with casual and ranked play, and a custom RetroFight FBNeo runtime built for competitive arcade sessions.",
       platforms: "Available for Windows and Linux.",
       downloadWindowsInstaller: "Windows installer",
       downloadWindowsPortable: "Windows portable zip",
@@ -274,7 +274,7 @@ export const dictionary = {
         },
         {
           title: "1v1 arcade flow",
-          text: "Choose a game, enter its lobby, challenge another player, and let RetroFight handle signaling before the runtime starts.",
+          text: "Pick a game, press Online, and RetroFight finds and confirms an opponent in the background before the runtime starts.",
         },
         {
           title: "Bring your own game files",
@@ -286,7 +286,7 @@ export const dictionary = {
         "Author: Stefano, RetroFight project.",
         "The project is present on GitHub under the RetroFight organization.",
         "The architecture is open source. The Electron client, the heart of the project, is not open source.",
-        "Some features are still on the roadmap, including rankings, spectator mode, advanced chat, and relay fallback for networks where direct play is not possible.",
+        "Some features are still on the roadmap, including spectator mode and advanced lobby chat.",
       ],
       githubCta: "Open RetroFight on GitHub",
     },
@@ -324,17 +324,16 @@ export const dictionary = {
         {
           title: "Start A Match",
           ordered: [
-            "Launch RetroFight.",
-            "Select a game from the catalog.",
-            "Enter the game lobby.",
-            "Choose an available player and send a challenge.",
-            "The challenged player can accept or reject the match.",
-            "When accepted, RetroFight starts signaling and UDP direct connection checks.",
-            "When the connection succeeds, RetroFight launches the RetroFight FBNeo runtime.",
-            "Play the match.",
-            "When the runtime closes, RetroFight returns to the lobby.",
+            "Launch RetroFight and sign in with your account.",
+            "Select a game from the catalog and choose Casual or Ranked.",
+            "Press Online. RetroFight searches for an opponent in the background.",
+            "While you wait, you can start a local Training session for the same game, or press Stop to leave the queue.",
+            "When an opponent is found, a Match Found banner shows both players with names, flags, rank, rating, and connection quality.",
+            "Press Accept to start, or Decline. If nobody accepts in time, the search continues automatically.",
+            "When both players accept, RetroFight runs UDP direct connection checks and launches the RetroFight FBNeo runtime.",
+            "After the match you can choose Rematch, New Search, or Exit.",
           ],
-          note: "Ranked play is disabled by default in the current release.",
+          note: "Ranked is mutual opt-in: a match counts as Ranked only when both players choose Ranked; otherwise it is Casual.",
         },
         {
           title: "Connection Status",
@@ -342,9 +341,9 @@ export const dictionary = {
             "Signaling: players are exchanging match setup information.",
             "UDP direct: RetroFight is checking whether direct UDP play is possible.",
             "Connected: the direct path is ready and the runtime can start.",
-            "Direct failed: UDP direct play did not succeed.",
+            "Relay: direct UDP did not succeed, so the match runs through a RetroFight server UDP relay.",
           ],
-          note: "If direct UDP fails, RetroFight cannot automatically recover through a relay.",
+          note: "If direct UDP play cannot be established, RetroFight can route match traffic through a server UDP relay so the match can still start. Direct play still gives the best latency.",
         },
         {
           title: "Troubleshooting",
@@ -377,17 +376,18 @@ export const dictionary = {
             {
               title: "UDP direct failed",
               items: [
-                "Allow RetroFight and RetroFight FBNeo through your firewall.",
+                "Allow RetroFight and RetroFight FBNeo through your firewall for the best, lowest-latency connection.",
                 "Avoid VPNs, hotspots, hotel networks, school networks, office networks, or restrictive routers when testing your connection.",
                 "Try again from a home network.",
-                "If the network blocks UDP direct traffic, RetroFight does not provide a relay fallback.",
+                "If direct UDP is blocked, RetroFight can fall back to a server UDP relay so the match still starts, though direct play gives lower latency.",
               ],
             },
             {
-              title: "Challenge flow gets stuck after rejecting",
+              title: "Match search gets stuck",
               items: [
-                "Reject the next challenge and try again.",
-                "Note the player names, approximate time, and click sequence before reporting the issue.",
+                "Press Stop to leave the queue, then press Online to search again.",
+                "If a Match Found banner does not respond, wait for the search to resume or restart it.",
+                "Note the game, approximate time, and what you pressed before reporting the issue.",
               ],
             },
           ],

@@ -2,9 +2,12 @@
 -- Apply this migration against the RetroFight Supabase project.
 --
 -- Product shape:
---   * Several seasons run CONCURRENTLY, each covering a small roster of games, so
---     the catalog gets exercised instead of everyone grinding the same title. A
---     player who wants a game that is not in season simply waits for its turn.
+--   * ONE season opens every ~9 days and runs for 28 days, each covering a small
+--     roster of games. Because a season outlives two openings, about three are
+--     alive at any moment -- but they are STAGGERED: only one is ever launched at
+--     a time, with its own single announcement. The catalog therefore gets
+--     exercised in waves instead of everyone grinding the same title, and a player
+--     who wants a game that is not in season simply waits for its turn.
 --   * Every season is a CLEAN SLATE: the first ranked match a player plays on a
 --     roster game creates their season row at the initial rating, so a veteran and
 --     a newcomer start the season level (see rankingPersist.ts, which writes the
@@ -130,51 +133,67 @@ RETURNS TABLE (
   total_matches INTEGER,
   wins          INTEGER,
   losses        INTEGER,
-  position      INTEGER
+  rank_position INTEGER
 )
 LANGUAGE sql
 STABLE
 SECURITY DEFINER
 SET search_path = public
 AS $$
-  WITH per_game AS (
-    SELECT
-      r.player_id,
-      GREATEST(ROUND(r.rating)::INTEGER - 1500, 0) AS game_points,
-      r.total_matches,
-      r.wins,
-      r.losses,
-      (r.total_matches >= 3) AS counts
-    FROM player_game_ratings r
-    JOIN ranking_season_games g ON g.game = r.game AND g.season_id = p_season_id
-    WHERE r.season_id = p_season_id
-  ),
-  totals AS (
-    SELECT
-      player_id,
-      COALESCE(SUM(game_points) FILTER (WHERE counts), 0)::INTEGER AS points,
-      COUNT(*) FILTER (WHERE counts)::INTEGER                      AS games_played,
-      SUM(total_matches)::INTEGER                                  AS total_matches,
-      SUM(wins)::INTEGER                                           AS wins,
-      SUM(losses)::INTEGER                                         AS losses
-    FROM per_game
-    GROUP BY player_id
-  )
+  -- Every column is table-qualified and the final ordering happens OUTSIDE the
+  -- projection: the RETURNS TABLE names are also parameter names in scope here, so
+  -- a bare `points` or `rank_position` would be ambiguous.
   SELECT
-    t.player_id,
-    p.display_name,
-    p.avatar_url,
-    p.country,
-    t.points,
-    t.games_played,
-    t.total_matches,
-    t.wins,
-    t.losses,
-    RANK() OVER (ORDER BY t.points DESC, t.wins DESC, t.total_matches ASC)::INTEGER AS position
-  FROM totals t
-  JOIN profiles p ON p.id = t.player_id
-  WHERE t.total_matches >= 5          -- below this a player is still calibrating
-  ORDER BY position, p.display_name
+    ranked.player_id,
+    ranked.display_name,
+    ranked.avatar_url,
+    ranked.country,
+    ranked.points,
+    ranked.games_played,
+    ranked.total_matches,
+    ranked.wins,
+    ranked.losses,
+    ranked.rank_position
+  FROM (
+    WITH per_game AS (
+      SELECT
+        r.player_id       AS player_id,
+        GREATEST(ROUND(r.rating)::INTEGER - 1500, 0) AS game_points,
+        r.total_matches   AS game_matches,
+        r.wins            AS game_wins,
+        r.losses          AS game_losses,
+        (r.total_matches >= 3) AS counts
+      FROM player_game_ratings r
+      JOIN ranking_season_games g ON g.game = r.game AND g.season_id = p_season_id
+      WHERE r.season_id = p_season_id
+    ),
+    totals AS (
+      SELECT
+        pg.player_id AS player_id,
+        COALESCE(SUM(pg.game_points) FILTER (WHERE pg.counts), 0)::INTEGER AS points,
+        COUNT(*) FILTER (WHERE pg.counts)::INTEGER                         AS games_played,
+        SUM(pg.game_matches)::INTEGER                                      AS total_matches,
+        SUM(pg.game_wins)::INTEGER                                         AS wins,
+        SUM(pg.game_losses)::INTEGER                                       AS losses
+      FROM per_game pg
+      GROUP BY pg.player_id
+    )
+    SELECT
+      t.player_id,
+      p.display_name,
+      p.avatar_url,
+      p.country,
+      t.points,
+      t.games_played,
+      t.total_matches,
+      t.wins,
+      t.losses,
+      RANK() OVER (ORDER BY t.points DESC, t.wins DESC, t.total_matches ASC)::INTEGER AS rank_position
+    FROM totals t
+    JOIN profiles p ON p.id = t.player_id
+    WHERE t.total_matches >= 5          -- below this a player is still calibrating
+  ) ranked
+  ORDER BY ranked.rank_position, ranked.display_name
   LIMIT LEAST(GREATEST(COALESCE(p_limit, 10), 1), 100);
 $$;
 
@@ -220,7 +239,7 @@ RETURNS TABLE (
   points        INTEGER,
   games_played  INTEGER,
   total_matches INTEGER,
-  position      INTEGER,
+  rank_position INTEGER,
   participants  INTEGER
 )
 LANGUAGE sql
@@ -229,22 +248,36 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
   WITH seasons AS (
-    SELECT * FROM ranking_seasons WHERE status = 'active'
+    SELECT rs.id, rs.slug, rs.name, rs.status, rs.starts_at, rs.ends_at
+    FROM ranking_seasons rs
+    WHERE rs.status = 'active'
     UNION ALL
-    SELECT * FROM (
-      SELECT * FROM ranking_seasons WHERE status = 'ended' ORDER BY ends_at DESC LIMIT 1
-    ) last_closed
+    SELECT closed.id, closed.slug, closed.name, closed.status, closed.starts_at, closed.ends_at
+    FROM (
+      SELECT rs2.id, rs2.slug, rs2.name, rs2.status, rs2.starts_at, rs2.ends_at
+      FROM ranking_seasons rs2
+      WHERE rs2.status = 'ended'
+      ORDER BY rs2.ends_at DESC
+      LIMIT 1
+    ) closed
   )
   SELECT
-    s.id, s.slug, s.name, s.status, s.starts_at, s.ends_at,
+    s.id,
+    s.slug,
+    s.name,
+    s.status,
+    s.starts_at,
+    s.ends_at,
     COALESCE(me.points, 0),
     COALESCE(me.games_played, 0),
     COALESCE(me.total_matches, 0),
-    me.position,
+    me.rank_position,
     (SELECT COUNT(*)::INTEGER FROM get_season_standings(s.id, 100))
   FROM seasons s
   LEFT JOIN LATERAL (
-    SELECT * FROM get_season_standings(s.id, 100) st WHERE st.player_id = auth.uid()
+    SELECT st.points, st.games_played, st.total_matches, st.rank_position
+    FROM get_season_standings(s.id, 100) st
+    WHERE st.player_id = auth.uid()
   ) me ON TRUE
   ORDER BY (s.status = 'active') DESC, s.ends_at;
 $$;
@@ -288,9 +321,12 @@ SET search_path = public
 AS $$
 DECLARE
   c_duration_days     CONSTANT INTEGER := 28;   -- one season lasts four weeks
-  c_stagger_days      CONSTANT INTEGER := 9;    -- new seasons opened together are offset,
-                                                -- so they never all end on the same day
-  c_target_active     CONSTANT INTEGER := 3;    -- seasons running concurrently
+  c_open_every_days   CONSTANT INTEGER := 9;    -- ...and a new one opens every nine days,
+                                                -- so ~3 overlap without ever launching
+                                                -- (or announcing) two at once
+  c_max_active        CONSTANT INTEGER := 4;    -- safety cap, not a target: with 28/9 only
+                                                -- 3-4 can overlap, and more would mean the
+                                                -- cadence or the duration drifted
   c_games_per_season  CONSTANT INTEGER := 5;
   c_min_games         CONSTANT INTEGER := 3;    -- below this the pool is too small: skip
   c_from_top_played   CONSTANT INTEGER := 3;    -- of which, drawn from the most played
@@ -302,10 +338,11 @@ DECLARE
   v_closed    INTEGER := 0;
   v_opened    INTEGER := 0;
   v_skipped   TEXT := NULL;
-  v_season    RECORD;
-  v_new_id    UUID;
-  v_index     INTEGER := 0;
-  v_number    INTEGER;
+  v_season      RECORD;
+  v_new_id      UUID;
+  v_last_start  TIMESTAMPTZ;
+  v_active      INTEGER;
+  v_number      INTEGER;
   v_slug      TEXT;
   v_name      TEXT;
   v_games     TEXT[];
@@ -329,8 +366,8 @@ BEGIN
     -- Results post: the top 10 by season points.
     SELECT string_agg(
              format('%s. **%s** — %s pts (%s games, %s matches)',
-                    st.position, st.display_name, st.points, st.games_played, st.total_matches),
-             E'\n' ORDER BY st.position)
+                    st.rank_position, st.display_name, st.points, st.games_played, st.total_matches),
+             E'\n' ORDER BY st.rank_position)
       INTO v_body
     FROM get_season_standings(v_season.id, 10) st;
 
@@ -355,8 +392,19 @@ BEGIN
     v_closed := v_closed + 1;
   END LOOP;
 
-  -- ── Open what is missing ──────────────────────────────────────────────────
-  WHILE (SELECT COUNT(*) FROM ranking_seasons WHERE status = 'active') < c_target_active LOOP
+  -- ── Open the next season, if one is due ───────────────────────────────────
+  -- Deliberately AT MOST ONE per pass. Seasons are staggered by cadence, not by
+  -- batching: opening several at once would also mean publishing several "new
+  -- season" posts on the same day, which is exactly what the news feed must not do.
+  SELECT MAX(s.starts_at) INTO v_last_start FROM ranking_seasons s;
+  SELECT COUNT(*) INTO v_active FROM ranking_seasons s WHERE s.status = 'active';
+
+  IF v_active >= c_max_active THEN
+    v_skipped := format('max_active_reached: %s season(s) already running', v_active);
+  ELSIF v_last_start IS NOT NULL AND v_last_start > v_now - make_interval(days => c_open_every_days) THEN
+    -- Not due yet. The very first run (no seasons at all) opens immediately.
+    NULL;
+  ELSE
     -- Cooldown: everything used by the last c_cooldown_seasons seasons (by start
     -- date), plus anything currently running. A game freed by the cooldown becomes
     -- drawable again on the season after that.
@@ -364,20 +412,20 @@ BEGIN
       INTO v_excluded
     FROM ranking_season_games g
     WHERE g.season_id IN (
-      SELECT id FROM ranking_seasons WHERE status = 'active'
+      SELECT s.id FROM ranking_seasons s WHERE s.status = 'active'
       UNION
-      SELECT id FROM (
-        SELECT id FROM ranking_seasons ORDER BY starts_at DESC LIMIT c_cooldown_seasons
+      SELECT recent.id FROM (
+        SELECT s2.id FROM ranking_seasons s2 ORDER BY s2.starts_at DESC LIMIT c_cooldown_seasons
       ) recent
     );
 
     -- 3 from the most-played games of the last 90 days...
-    SELECT COALESCE(ARRAY_AGG(game), '{}') INTO v_games
+    SELECT COALESCE(ARRAY_AGG(picked.game), '{}') INTO v_games
     FROM (
       SELECT rg.game
       FROM ranked_games rg
       JOIN (
-        SELECT m.game, COUNT(*) AS plays
+        SELECT m.game AS game, COUNT(*) AS plays
         FROM match_history m
         WHERE m.played_at >= v_now - make_interval(days => c_recent_days)
         GROUP BY m.game
@@ -392,7 +440,7 @@ BEGIN
 
     -- ...the rest from anywhere else in the pool, so titles nobody has tried yet
     -- still get their turn.
-    SELECT v_games || COALESCE(ARRAY_AGG(game), '{}') INTO v_games
+    SELECT v_games || COALESCE(ARRAY_AGG(picked.game), '{}') INTO v_games
     FROM (
       SELECT rg.game
       FROM ranked_games rg
@@ -403,60 +451,55 @@ BEGIN
       LIMIT c_games_per_season - COALESCE(array_length(v_games, 1), 0)
     ) picked;
 
-    -- Pool exhausted (too few ranked games, or too many on cooldown): stop rather
-    -- than open a thin season. The caller sees why in the returned summary.
+    -- Pool exhausted (too few ranked games, or too many on cooldown): skip this
+    -- opening rather than launch a thin season. The next pass tries again, so the
+    -- season simply starts late instead of starting wrong.
     IF COALESCE(array_length(v_games, 1), 0) < c_min_games THEN
       v_skipped := format('pool_too_small: %s game(s) available, %s required',
                           COALESCE(array_length(v_games, 1), 0), c_min_games);
-      EXIT;
+    ELSE
+      SELECT COUNT(*)::INTEGER + 1 INTO v_number FROM ranking_seasons;
+      v_slug := 'season-' || v_number;
+      v_name := 'Season ' || v_number;
+
+      INSERT INTO ranking_seasons (name, slug, status, starts_at, ends_at)
+      VALUES (v_name, v_slug, 'active', v_now, v_now + make_interval(days => c_duration_days))
+      RETURNING id INTO v_new_id;
+
+      INSERT INTO ranking_season_games (season_id, game)
+      SELECT v_new_id, unnest(v_games);
+
+      -- Opening post: what to play, how it is scored, when it ends.
+      SELECT string_agg(format('- **%s**', rg.name), E'\n' ORDER BY rg.name)
+        INTO v_body
+      FROM ranked_games rg WHERE rg.game = ANY(v_games);
+
+      v_body := format(
+        E'**%s** is open until %s.\n\n**Games this season**\n\n%s\n\n'
+        || E'**How it works**\n\n'
+        || E'- Everyone starts from %s on every season game -- veterans and newcomers alike.\n'
+        || E'- Play a season game in **ranked** mode; casual matches do not count.\n'
+        || E'- Your season score is the rating you build above %s, summed across the season '
+        || E'games you played (at least 3 matches on a game for it to count).\n'
+        || E'- A game never costs you points, so trying a new one is free.\n'
+        || E'- You appear in the standings after 5 matches.\n'
+        || E'- Other seasons may still be running: each has its own games and its own table.',
+        v_name,
+        to_char(v_now + make_interval(days => c_duration_days), 'FMMonth FMDDth'),
+        COALESCE(v_body, '- (roster pending)'), 1500, 1500
+      );
+
+      PERFORM publish_season_news(
+        v_slug || '-open',
+        v_name || ' has started',
+        format('%s games in rotation -- everyone starts level.', COALESCE(array_length(v_games, 1), 0)),
+        v_body
+      );
+
+      v_opened_slugs := v_opened_slugs || v_slug;
+      v_opened := 1;
     END IF;
-
-    SELECT COUNT(*)::INTEGER + 1 INTO v_number FROM ranking_seasons;
-    v_slug := 'season-' || v_number;
-    v_name := 'Season ' || v_number;
-
-    INSERT INTO ranking_seasons (name, slug, status, starts_at, ends_at)
-    VALUES (
-      v_name,
-      v_slug,
-      'active',
-      v_now,
-      v_now + make_interval(days => c_duration_days + v_index * c_stagger_days)
-    )
-    RETURNING id INTO v_new_id;
-
-    INSERT INTO ranking_season_games (season_id, game)
-    SELECT v_new_id, unnest(v_games);
-
-    -- Opening post: what to play, how it is scored, when it ends.
-    SELECT string_agg(format('- **%s**', rg.name), E'\n' ORDER BY rg.name)
-      INTO v_body
-    FROM ranked_games rg WHERE rg.game = ANY(v_games);
-
-    v_body := format(
-      E'**%s** is open until %s.\n\n**Games this season**\n\n%s\n\n'
-      || E'**How it works**\n\n'
-      || E'- Everyone starts from %s on every season game — veterans and newcomers alike.\n'
-      || E'- Play a season game in **ranked** mode; casual matches do not count.\n'
-      || E'- Your season score is the rating you build above %s, summed across the season '
-      || E'games you played (at least 3 matches on a game for it to count).\n'
-      || E'- A game never costs you points, so trying a new one is free.\n'
-      || E'- You appear in the standings after 5 matches.',
-      v_name, to_char(v_now + make_interval(days => c_duration_days + v_index * c_stagger_days), 'FMMonth FMDDth'),
-      COALESCE(v_body, '- (roster pending)'), 1500, 1500
-    );
-
-    PERFORM publish_season_news(
-      v_slug || '-open',
-      v_name || ' has started',
-      format('%s new games in rotation — everyone starts level.', COALESCE(array_length(v_games, 1), 0)),
-      v_body
-    );
-
-    v_opened_slugs := v_opened_slugs || v_slug;
-    v_opened := v_opened + 1;
-    v_index := v_index + 1;
-  END LOOP;
+  END IF;
 
   RETURN jsonb_build_object(
     'closed', v_closed,
